@@ -6,8 +6,6 @@ import java.lang.annotation.*;
 
 import org.junit.Test;
 
-import com.github.t1.stereotypes.*;
-
 public class AnnotationsTest {
 
     @Test
