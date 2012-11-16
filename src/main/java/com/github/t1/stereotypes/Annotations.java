@@ -10,19 +10,29 @@ import java.util.Map.Entry;
  * getAnnotations()}, etc. on a class object, you call {@link Annotations#on(Class)} and then do everything just the
  * same but on this class.
  */
-public class Annotations {
+public abstract class Annotations {
 
     public static Annotations on(Class<?> container) {
-        return new Annotations(container);
+        return new TypeAnnotations(container);
     }
 
-    private final Map<Class<? extends Annotation>, Annotation> annotationCache;
-
-    private Annotations(Class<?> container) {
-        this.annotationCache = getAnnotations(null, container.getAnnotations());
+    public static Annotations onField(Class<?> container, String fieldName) {
+        return new FieldAnnotations(container, fieldName);
     }
 
-    private Map<Class<? extends Annotation>, Annotation> getAnnotations(Annotation containerAnnotation,
+    private Map<Class<? extends Annotation>, Annotation> annotationCache;
+
+    protected abstract Map<Class<? extends Annotation>, Annotation> loadCache();
+
+    private Map<Class<? extends Annotation>, Annotation> getCache() {
+        if (annotationCache == null)
+            annotationCache = loadCache();
+        if (annotationCache == null)
+            throw new NullPointerException(this.getClass().getSimpleName() + "#loadCache() returned null");
+        return annotationCache;
+    }
+
+    protected Map<Class<? extends Annotation>, Annotation> getAnnotations(Annotation containerAnnotation,
             Annotation[] annotations) {
         Map<Class<? extends Annotation>, Annotation> result = new HashMap<>();
         for (Annotation annotation : annotations) {
@@ -105,7 +115,7 @@ public class Annotations {
     public <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
         if (annotationClass == null)
             throw new NullPointerException();
-        return annotationClass.cast(annotationCache.get(annotationClass));
+        return annotationClass.cast(getCache().get(annotationClass));
     }
 
     public <A extends Annotation> boolean isAnnotationPresent(Class<A> annotationClass) {
@@ -115,6 +125,6 @@ public class Annotations {
     }
 
     public Annotation[] getAnnotations() {
-        return annotationCache.values().toArray(new Annotation[annotationCache.size()]);
+        return getCache().values().toArray(new Annotation[getCache().size()]);
     }
 }

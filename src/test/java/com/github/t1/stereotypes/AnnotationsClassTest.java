@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 import org.junit.Test;
 
-public class AnnotationsTest {
+public class AnnotationsClassTest {
 
     @Test
     public void directAnnotationShouldBePresent() throws Exception {
@@ -94,7 +94,7 @@ public class AnnotationsTest {
     }
 
     @Test
-    public void inheritedAnnotationShouldBePresent() throws Exception {
+    public void expandedAnnotationShouldBePresent() throws Exception {
         @TestStereotype()
         class Target {
         }
@@ -105,7 +105,7 @@ public class AnnotationsTest {
     }
 
     @Test
-    public void doubleIndirectAnnotationShouldBePresent() throws Exception {
+    public void indirectlyExpandedAnnotationShouldBePresent() throws Exception {
         @IndirectTestStereotype
         class Target {
         }
@@ -116,7 +116,7 @@ public class AnnotationsTest {
     }
 
     @Test
-    public void shouldGetInheritedAnnotations() throws Exception {
+    public void shouldGetExpandedAnnotations() throws Exception {
         @TestStereotype
         class Target {
         }
@@ -136,11 +136,11 @@ public class AnnotationsTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("indirect-test", ((TestAnnotation) annotations[0]).value());
+        assertEquals("stereotype-test", ((TestAnnotation) annotations[0]).value());
     }
 
     @Test
-    public void shouldInheritNoTargetAnnotation() throws Exception {
+    public void shouldNotExpandTargetAnnotation() throws Exception {
         @NoTargetStereotype
         class Target {
         }
@@ -152,7 +152,7 @@ public class AnnotationsTest {
     }
 
     @Test
-    public void shouldOverwriteInheritedAnnotationValues() throws Exception {
+    public void shouldOverwriteExpandedAnnotationValues() throws Exception {
         @TestAnnotation("overwritten-test")
         @TestStereotype
         class Target {
@@ -165,7 +165,7 @@ public class AnnotationsTest {
     }
 
     @Test
-    public void shouldOverwriteDoubleInheritedAnnotationValues() throws Exception {
+    public void shouldOverwriteDoubleExpandedAnnotationValues() throws Exception {
         @TestAnnotation("overwritten-test")
         @IndirectTestStereotype
         class Target {
@@ -178,7 +178,7 @@ public class AnnotationsTest {
     }
 
     @Test
-    public void shouldInheritMetaOrTypeStereotype() throws Exception {
+    public void shouldExpandMetaOrTypeStereotype() throws Exception {
         @MetaStereotype
         class Target {
         }

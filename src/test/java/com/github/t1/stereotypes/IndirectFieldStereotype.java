@@ -5,9 +5,9 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-@TestStereotype()
+@FieldStereotype()
 @Stereotype
 @Retention(RUNTIME)
-@Target(TYPE)
-public @interface IndirectTestStereotype {
+@Target(FIELD)
+public @interface IndirectFieldStereotype {
 }

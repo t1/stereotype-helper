@@ -5,9 +5,9 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-@TestStereotype()
 @Stereotype
+@FieldAnnotation("stereotype-test")
 @Retention(RUNTIME)
-@Target(TYPE)
-public @interface IndirectTestStereotype {
+@Target({ FIELD, ANNOTATION_TYPE })
+public @interface FieldStereotype {
 }
