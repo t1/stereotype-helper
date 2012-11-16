@@ -7,6 +7,6 @@ import java.lang.annotation.*;
 
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface TestAnnotation2 {
-    public int value() default 1;
+public @interface TypeAnnotation2 {
+    public int value() default 2;
 }

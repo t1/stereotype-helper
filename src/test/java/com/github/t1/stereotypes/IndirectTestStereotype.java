@@ -5,7 +5,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-@TestStereotype()
+@TypeStereotype()
 @Stereotype
 @Retention(RUNTIME)
 @Target(TYPE)

@@ -6,22 +6,22 @@ import java.lang.annotation.*;
 
 import org.junit.Test;
 
-public class AnnotationsClassTest {
+public class AnnotationsTypeTest {
 
     @Test
     public void directAnnotationShouldBePresent() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
-        boolean present = Annotations.on(Target.class).isAnnotationPresent(TestAnnotation.class);
+        boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
         assertTrue(present);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullAnnotationShouldThrowNPE() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
@@ -30,7 +30,7 @@ public class AnnotationsClassTest {
 
     @Test
     public void missingAnnotationShouldNotBePresent() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
@@ -41,7 +41,7 @@ public class AnnotationsClassTest {
 
     @Test
     public void stereotypeAnnotationShouldNotBePresent() throws Exception {
-        @TestStereotype
+        @TypeStereotype
         class Target {
         }
 
@@ -52,18 +52,18 @@ public class AnnotationsClassTest {
 
     @Test
     public void shouldGetDirectAnnotation() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
-        TestAnnotation annotation = Annotations.on(Target.class).getAnnotation(TestAnnotation.class);
+        TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
         assertEquals("test", annotation.value());
     }
 
     @Test(expected = NullPointerException.class)
     public void gettingNullAnnotationShouldThrowNPE() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
@@ -72,7 +72,7 @@ public class AnnotationsClassTest {
 
     @Test
     public void missingAnnotationShouldGetNull() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
@@ -83,23 +83,23 @@ public class AnnotationsClassTest {
 
     @Test
     public void shouldGetDirectAnnotations() throws Exception {
-        @TestAnnotation("test")
+        @TypeAnnotation1("test")
         class Target {
         }
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("test", ((TestAnnotation) annotations[0]).value());
+        assertEquals("test", ((TypeAnnotation1) annotations[0]).value());
     }
 
     @Test
     public void expandedAnnotationShouldBePresent() throws Exception {
-        @TestStereotype()
+        @TypeStereotype()
         class Target {
         }
 
-        boolean present = Annotations.on(Target.class).isAnnotationPresent(TestAnnotation.class);
+        boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
         assertTrue(present);
     }
@@ -110,21 +110,21 @@ public class AnnotationsClassTest {
         class Target {
         }
 
-        boolean present = Annotations.on(Target.class).isAnnotationPresent(TestAnnotation.class);
+        boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
         assertTrue(present);
     }
 
     @Test
     public void shouldGetExpandedAnnotations() throws Exception {
-        @TestStereotype
+        @TypeStereotype
         class Target {
         }
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("stereotype-test", ((TestAnnotation) annotations[0]).value());
+        assertEquals("stereotype-test", ((TypeAnnotation1) annotations[0]).value());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class AnnotationsClassTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("stereotype-test", ((TestAnnotation) annotations[0]).value());
+        assertEquals("stereotype-test", ((TypeAnnotation1) annotations[0]).value());
     }
 
     @Test
@@ -153,20 +153,20 @@ public class AnnotationsClassTest {
 
     @Test
     public void shouldOverwriteExpandedAnnotationValues() throws Exception {
-        @TestAnnotation("overwritten-test")
-        @TestStereotype
+        @TypeAnnotation1("overwritten-test")
+        @TypeStereotype
         class Target {
         }
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("overwritten-test", ((TestAnnotation) annotations[0]).value());
+        assertEquals("overwritten-test", ((TypeAnnotation1) annotations[0]).value());
     }
 
     @Test
     public void shouldOverwriteDoubleExpandedAnnotationValues() throws Exception {
-        @TestAnnotation("overwritten-test")
+        @TypeAnnotation1("overwritten-test")
         @IndirectTestStereotype
         class Target {
         }
@@ -174,7 +174,7 @@ public class AnnotationsClassTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("overwritten-test", ((TestAnnotation) annotations[0]).value());
+        assertEquals("overwritten-test", ((TypeAnnotation1) annotations[0]).value());
     }
 
     @Test
@@ -186,9 +186,9 @@ public class AnnotationsClassTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(2, annotations.length);
-        int a = (annotations[0] instanceof TestAnnotation) ? 0 : 1;
+        int a = (annotations[0] instanceof TypeAnnotation1) ? 0 : 1;
         int b = (a + 1) % 2;
-        assertEquals("meta-test", ((TestAnnotation) annotations[a]).value());
+        assertEquals("meta-test", ((TypeAnnotation1) annotations[a]).value());
         assertEquals("meta-or-type-annotation", ((MetaOrTypeAnnotation) annotations[b]).value());
     }
 
@@ -201,8 +201,8 @@ public class AnnotationsClassTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("default", ((TestAnnotation) annotations[0]).value());
-        assertEquals(3, ((TestAnnotation) annotations[0]).number());
+        assertEquals("default", ((TypeAnnotation1) annotations[0]).value());
+        assertEquals(3, ((TypeAnnotation1) annotations[0]).number());
     }
 
     @Test
@@ -214,8 +214,8 @@ public class AnnotationsClassTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals("passed-in", ((TestAnnotation) annotations[0]).value());
-        assertEquals(5, ((TestAnnotation) annotations[0]).number());
+        assertEquals("passed-in", ((TypeAnnotation1) annotations[0]).value());
+        assertEquals(5, ((TypeAnnotation1) annotations[0]).number());
     }
 
     @Test
@@ -227,18 +227,31 @@ public class AnnotationsClassTest {
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
         assertEquals(1, annotations.length);
-        assertEquals(99, ((TestAnnotation2) annotations[0]).value());
+        assertEquals(99, find(TypeAnnotation2.class, annotations).value());
     }
 
     @Test
-    public void shouldNotGetOverwrittenConflictingReturnTypeOverwrite() throws Exception {
-        @OverwritingStereotype2(value = "hi", number = 3)
+    public void shouldResolveConflictingReturnTypeOverwrite() throws Exception {
+        @TypeConflictStereotype(value = 10, value2 = 20)
         class Target {
         }
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
-        assertEquals(1, annotations.length);
-        assertEquals(99, ((TestAnnotation2) annotations[0]).value());
+        assertEquals(4, annotations.length);
+        assertEquals("stereotype-test", find(TypeAnnotation1.class, annotations).value());
+        assertEquals(1, find(TypeAnnotation1.class, annotations).number());
+        assertEquals(10, find(TypeAnnotation2.class, annotations).value());
+        assertEquals(20, find(TypeAnnotation3.class, annotations).value());
+        assertEquals(10, find(TypeAnnotation4.class, annotations).value());
+    }
+
+    private <T> T find(Class<T> type, Annotation[] annotations) {
+        for (Annotation annotation : annotations) {
+            if (type.isInstance(annotation)) {
+                return type.cast(annotation);
+            }
+        }
+        throw new RuntimeException("not found");
     }
 }

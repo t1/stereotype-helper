@@ -10,11 +10,11 @@ import javax.annotation.Generated;
 import com.github.t1.stereotypes.Stereotype;
 
 @Stereotype
-@TestAnnotation("stereotype-test")
+@TypeAnnotation1("stereotype-test")
 @Documented
 @Inherited
 @Retention(RUNTIME)
 @Target(TYPE)
 @Generated("not really")
-public @interface TestStereotype {
+public @interface TypeStereotype {
 }

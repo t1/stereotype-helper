@@ -5,12 +5,8 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-import com.github.t1.stereotypes.Stereotype;
-
-@Stereotype
-@TypeAnnotation1("meta-test")
-@MetaOrTypeAnnotation
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface MetaStereotype {
+public @interface TypeAnnotation3 {
+    public int value() default 3;
 }

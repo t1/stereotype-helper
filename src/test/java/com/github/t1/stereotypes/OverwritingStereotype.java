@@ -10,7 +10,7 @@ import javax.annotation.Generated;
 import com.github.t1.stereotypes.Stereotype;
 
 @Stereotype
-@TestAnnotation(value = "dummy", number = 2)
+@TypeAnnotation1(value = "dummy", number = 2)
 @Documented
 @Inherited
 @Retention(RUNTIME)

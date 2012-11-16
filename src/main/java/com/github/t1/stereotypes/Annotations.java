@@ -47,7 +47,7 @@ public abstract class Annotations {
                 inheritAnnotations(annotation, result);
             } else {
                 // eventually overwrite inherited annotations
-                result.put(annotationType, overwritten(containerAnnotation, annotation));
+                result.put(annotationType, propagated(containerAnnotation, annotation));
             }
         }
         return result;
@@ -77,9 +77,9 @@ public abstract class Annotations {
 
     /**
      * If there is a method in the container annotation with the same name as a method in the contained annotation, then
-     * overwrite the contained value (which is only a dummy) with the value of the container.
+     * propagate the value of the container to the contained value (which is only a dummy).
      */
-    private Annotation overwritten(Annotation container, Annotation contained) {
+    private Annotation propagated(Annotation container, Annotation contained) {
         if (container == null)
             return contained;
         AnnotationProxyBuilder proxyBuilder = new AnnotationProxyBuilder(contained);
@@ -87,7 +87,7 @@ public abstract class Annotations {
             assert method.getReturnType() != Void.TYPE : method + " returns void";
             assert method.getParameterTypes().length == 0 : method + " takes parameters";
 
-            Method containerMethod = getContainerMethod(container, method.getName(), method.getReturnType());
+            Method containerMethod = getContainerMethod(container, method);
             if (containerMethod == null)
                 continue;
             Object containerValue = get(container, containerMethod);
@@ -96,24 +96,53 @@ public abstract class Annotations {
         return proxyBuilder.build();
     }
 
-    private Method getContainerMethod(Annotation container, String name, Class<?> returnType) {
-        for (Method method : container.annotationType().getDeclaredMethods()) {
-            assert method.getReturnType() != Void.TYPE : method + " returns void";
-            assert method.getParameterTypes().length == 0 : method + " takes parameters";
-
-            if (name.equals(method.getName()) && returnType.equals(method.getReturnType())) {
-                return method;
-            }
-        }
-        return null;
-    }
-
     private Object get(Object instance, Method method) {
         try {
             return method.invoke(instance);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Method getContainerMethod(Annotation container, Method annotationMethod) {
+        for (Method containerMethod : container.annotationType().getDeclaredMethods()) {
+            assert containerMethod.getReturnType() != Void.TYPE : containerMethod + " returns void";
+            assert containerMethod.getParameterTypes().length == 0 : containerMethod + " takes parameters";
+
+            if (matches(annotationMethod, containerMethod)) {
+                return containerMethod;
+            }
+        }
+        return null;
+    }
+
+    private boolean matches(Method annotationMethod, Method containerMethod) {
+        String name = propagatedName(annotationMethod);
+        Class<?> returnType = annotationMethod.getReturnType();
+        if (!name.equals(propagatedName(containerMethod)))
+            return false;
+        if (!returnType.equals(containerMethod.getReturnType()))
+            return false;
+        return matchesPropagatedType(annotationMethod, containerMethod);
+    }
+
+    private String propagatedName(Method containerMethod) {
+        PropagateTo propagateTo = containerMethod.getAnnotation(PropagateTo.class);
+        if (propagateTo == null || "".equals(propagateTo.name()))
+            return containerMethod.getName();
+        return propagateTo.name();
+    }
+
+    private boolean matchesPropagatedType(Method annotationMethod, Method containerMethod) {
+        PropagateTo propagateTo = containerMethod.getAnnotation(PropagateTo.class);
+        if (propagateTo == null)
+            return true;
+        for (Class<? extends Annotation> matchingType : propagateTo.value()) {
+            if (annotationMethod.getDeclaringClass() == matchingType) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public <A extends Annotation> A getAnnotation(Class<A> annotationClass) {

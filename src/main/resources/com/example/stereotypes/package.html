@@ -1,19 +1,25 @@
 <body>
-Helps libraries to support stereotypes, so their users can encapsulate the libraries' annotations into their own, allowing to reuse them.
+	Helps libraries to support stereotypes, so their users can encapsulate
+	the libraries' annotations into their own, allowing to reuse them.
 
-<h3>Features Supported</h3>
-<ul>
-	<li>{@link Stereotype} (careful: this is our own type!) works just
-		as with CDI: Inherit the library-annotations on the user-annotation to the site-of-use.  
-	<li>Annotation parameters from the user-annotation are propagated into your annotations.
-	<li>Type, Field, and Method annotations
-</ul>
+	<h3>Features Supported</h3>
+	<ul>
+		<li>{@link Stereotype} (careful: this is our own type!) works
+			just as with CDI: Inherit the library-annotations on the
+			user-annotation to the site-of-use.
+		<li>Annotation parameters from the user-annotation are propagated
+			into your annotations.
+		<li>Propagate same-type, same-name annotations by annotating the
+			container-method
+		<li>Type, Field, and Method annotations
+	</ul>
 
-<h3>Features Not Yet Supported</h3>
-<ul>
-	<li>Propagate same-type, same-name annotations by annotating the container-method
-	<li>Default annotations on classes and packages
-	<li>PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, and PACKAGE annotations
-	<li>Allow adding library-annotations and properties from (xml?) config files (deployment descriptors)
-</ul>
+	<h3>Features Not Yet Supported</h3>
+	<ul>
+		<li>Default annotations on classes and packages
+		<li>PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, and
+			PACKAGE annotations
+		<li>Allow adding library-annotations and properties from (xml?)
+			config files (deployment descriptors)
+	</ul>
 </body>
