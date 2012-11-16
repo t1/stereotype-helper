@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public class FieldAnnotations extends Annotations {
+class FieldAnnotations extends Annotations {
 
     private final Field field;
 

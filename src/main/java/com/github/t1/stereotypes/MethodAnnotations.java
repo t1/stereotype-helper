@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class MethodAnnotations extends Annotations {
+class MethodAnnotations extends Annotations {
 
     private final Method method;
 
