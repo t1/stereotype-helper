@@ -5,9 +5,10 @@ import java.lang.reflect.*;
 import java.util.*;
 
 /**
- * Allows to overwrite the values of some annotation methods.
+ * {@link #build() Builds} a {@Proxy dynamic proxy} to overwrite the values of some annotation methods. If there
+ * are no {@link #overwrite(Method, Object) overwrites}, the original annotation is returned.
  */
-public class AnnotationProxyBuilder {
+class AnnotationProxyBuilder {
 
     private class AnnotationInvocationHandler implements InvocationHandler {
         @Override

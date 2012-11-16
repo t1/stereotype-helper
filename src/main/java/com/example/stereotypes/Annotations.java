@@ -63,7 +63,7 @@ public class Annotations {
     private Annotation overwritten(Annotation container, Annotation contained) {
         if (container == null)
             return contained;
-        AnnotationProxyBuilder replacement = null;
+        AnnotationProxyBuilder proxyBuilder = new AnnotationProxyBuilder(contained);
         for (Method method : contained.annotationType().getDeclaredMethods()) {
             assert method.getReturnType() != Void.TYPE : method + " returns void";
             assert method.getParameterTypes().length == 0 : method + " takes parameters";
@@ -71,12 +71,10 @@ public class Annotations {
             Method containerMethod = getContainerMethod(container, method.getName(), method.getReturnType());
             if (containerMethod == null)
                 continue;
-            if (replacement == null)
-                replacement = new AnnotationProxyBuilder(contained);
             Object containerValue = get(container, containerMethod);
-            replacement.overwrite(method, containerValue);
+            proxyBuilder.overwrite(method, containerValue);
         }
-        return (replacement != null) ? replacement.build() : contained;
+        return proxyBuilder.build();
     }
 
     private Method getContainerMethod(Annotation container, String name, Class<?> returnType) {
