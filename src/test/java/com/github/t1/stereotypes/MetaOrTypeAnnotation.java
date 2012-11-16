@@ -1,4 +1,4 @@
-package com.example.stereotypes;
+package com.github.t1.stereotypes;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;

@@ -1,11 +1,11 @@
-package com.example.stereotypes;
+package com.github.t1.stereotypes;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-import com.example.stereotypes.Stereotype;
+import com.github.t1.stereotypes.Stereotype;
 
 @Stereotype
 @Retention(RUNTIME)

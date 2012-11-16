@@ -1,4 +1,4 @@
-package com.example.stereotypes;
+package com.github.t1.stereotypes;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -6,7 +6,6 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.*;
 
 @Retention(RUNTIME)
-@Target(TYPE)
-public @interface TestAnnotation2 {
-    public int value() default 1;
+@Target(ANNOTATION_TYPE)
+public @interface Stereotype {
 }

@@ -1,4 +1,4 @@
-package com.example.stereotypes;
+package com.github.t1.stereotypes;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;

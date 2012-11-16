@@ -1,10 +1,15 @@
-package com.example.stereotypes;
+package com.github.t1.stereotypes;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
 
+/**
+ * This is the main class for the library to read annotations: instead of calling {@link Class#getAnnotations()
+ * getAnnotations()}, etc. on a class object, you call {@link Annotations#on(Class)} and then do everything just the
+ * same but on this class.
+ */
 public class Annotations {
 
     public static Annotations on(Class<?> container) {
