@@ -20,6 +20,10 @@ public abstract class Annotations {
         return new FieldAnnotations(container, fieldName);
     }
 
+    public static Annotations onMethod(Class<?> container, String methodName, Class<?>... parameterTypes) {
+        return new MethodAnnotations(container, methodName, parameterTypes);
+    }
+
     private Map<Class<? extends Annotation>, Annotation> annotationCache;
 
     protected abstract Map<Class<? extends Annotation>, Annotation> loadCache();
