@@ -76,7 +76,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldGetDirectAnnotationWithArgs() throws Exception {
+    public void shouldGetDirectAnnotationWithArg() throws Exception {
         class Target {
             @MethodAnnotation
             public String method(String arg) {
@@ -88,6 +88,71 @@ public class AnnotationsMethodTest {
                 MethodAnnotation.class);
 
         assertEquals("default", annotation.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationWithMultipleMethods() throws Exception {
+        class Target {
+            @MethodAnnotation
+            public String method1(String arg) {
+                return arg;
+            }
+
+            @MethodAnnotation
+            public String method2(String arg) {
+                return arg;
+            }
+        }
+
+        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(
+                MethodAnnotation.class);
+
+        assertEquals("default", annotation1.value());
+
+        MethodAnnotation annotation2 = Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(
+                MethodAnnotation.class);
+
+        assertEquals("default", annotation2.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationWithMultipleArgs() throws Exception {
+        class Target {
+            @MethodAnnotation
+            public String method(String arg0, int arg1) {
+                return arg0 + arg1;
+            }
+        }
+
+        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "method", String.class, Integer.TYPE).getAnnotation(
+                MethodAnnotation.class);
+
+        assertEquals("default", annotation1.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationMultipleMethodsWithSameName() throws Exception {
+        class Target {
+            @MethodAnnotation
+            public String method(String arg) {
+                return arg;
+            }
+
+            @MethodAnnotation
+            public Integer method(Integer arg) {
+                return arg;
+            }
+        }
+
+        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "method", String.class).getAnnotation(
+                MethodAnnotation.class);
+
+        assertEquals("default", annotation1.value());
+
+        MethodAnnotation annotation2 = Annotations.onMethod(Target.class, "method", Integer.class).getAnnotation(
+                MethodAnnotation.class);
+
+        assertEquals("default", annotation2.value());
     }
 
     @Test(expected = NullPointerException.class)
