@@ -285,4 +285,20 @@ public class AnnotationsMethodTest {
         assertEquals(1, annotations.length);
         assertEquals("overwritten-test", ((MethodAnnotation) annotations[0]).value());
     }
+
+    @Test
+    public void shouldDefaultToTypeAnnotation() throws Exception {
+        @MethodAnnotation("type-default")
+        class Target {
+            @SuppressWarnings("unused")
+            public String method() {
+                return "";
+            }
+        }
+
+        Annotation[] annotations = Annotations.onMethod(Target.class, "method").getAnnotations();
+
+        assertEquals(1, annotations.length);
+        assertEquals("type-default", ((MethodAnnotation) annotations[0]).value());
+    }
 }

@@ -36,16 +36,39 @@ public abstract class Annotations {
         return annotationCache;
     }
 
-    protected Map<Class<? extends Annotation>, Annotation> getAnnotations(Annotation containerAnnotation,
+    protected Map<Class<? extends Annotation>, Annotation> getAnnotations(Class<?> type, Annotation[] annotations) {
+        return resolveDefaults(type, resolveStereotypes(null, annotations));
+    }
+
+    private Map<Class<? extends Annotation>, Annotation> resolveDefaults(Class<?> type,
+            Map<Class<? extends Annotation>, Annotation> annotations) {
+        for (Annotation annotation : type.getDeclaredAnnotations()) {
+            Class<? extends Annotation> annotationType = annotation.annotationType();
+            if (!annotationType.isAnnotationPresent(Stereotype.class) && allowedAtTarget(annotation)
+                    && !annotations.containsKey(annotationType)) {
+                annotations.put(null, annotation);
+            }
+        }
+        return annotations;
+    }
+
+    private boolean allowedAtTarget(Annotation annotation) {
+        Target target = annotation.annotationType().getAnnotation(Target.class);
+        if (target == null)
+            return true;
+        return Arrays.asList(target.value()).contains(getAllowedAnnotationTarget());
+    }
+
+    protected abstract ElementType getAllowedAnnotationTarget();
+
+    private Map<Class<? extends Annotation>, Annotation> resolveStereotypes(Annotation containerAnnotation,
             Annotation[] annotations) {
         Map<Class<? extends Annotation>, Annotation> result = new HashMap<>();
         for (Annotation annotation : annotations) {
             Class<? extends Annotation> annotationType = annotation.annotationType();
-            if (!inheritable(annotationType))
-                continue;
             if (annotationType.isAnnotationPresent(Stereotype.class)) {
                 inheritAnnotations(annotation, result);
-            } else {
+            } else if (allowedAtTarget(annotation)) {
                 // eventually overwrite inherited annotations
                 result.put(annotationType, propagated(containerAnnotation, annotation));
             }
@@ -53,19 +76,8 @@ public abstract class Annotations {
         return result;
     }
 
-    /**
-     * Annotations that are themselves only allowed on annotations (e.g. Retention, Target, Generated, or Stereotype
-     * itself) are not inherited.
-     */
-    private boolean inheritable(Class<? extends Annotation> annotationType) {
-        Target allowedTargets = annotationType.getAnnotation(Target.class);
-        if (allowedTargets == null || allowedTargets.value().length != 1)
-            return true;
-        return allowedTargets.value()[0] != ElementType.ANNOTATION_TYPE;
-    }
-
     private void inheritAnnotations(Annotation annotation, Map<Class<? extends Annotation>, Annotation> result) {
-        Map<Class<? extends Annotation>, Annotation> inherited = getAnnotations(annotation,
+        Map<Class<? extends Annotation>, Annotation> inherited = resolveStereotypes(annotation,
                 annotation.annotationType().getAnnotations());
         // only add inherited annotations that are not overwritten in this level
         for (Entry<Class<? extends Annotation>, Annotation> entry : inherited.entrySet()) {

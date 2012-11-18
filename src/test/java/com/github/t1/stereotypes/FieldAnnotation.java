@@ -6,7 +6,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.*;
 
 @Retention(RUNTIME)
-@Target({ FIELD, ANNOTATION_TYPE })
+@Target({ FIELD, TYPE, ANNOTATION_TYPE })
 public @interface FieldAnnotation {
     public String value() default "default";
 }

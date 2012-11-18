@@ -1,6 +1,6 @@
 package com.github.t1.stereotypes;
 
-import java.lang.annotation.Annotation;
+import java.lang.annotation.*;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -18,6 +18,11 @@ class FieldAnnotations extends Annotations {
 
     @Override
     protected Map<Class<? extends Annotation>, Annotation> loadCache() {
-        return getAnnotations(null, field.getAnnotations());
+        return getAnnotations(field.getDeclaringClass(), field.getAnnotations());
+    }
+
+    @Override
+    protected ElementType getAllowedAnnotationTarget() {
+        return ElementType.FIELD;
     }
 }

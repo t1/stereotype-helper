@@ -177,4 +177,18 @@ public class AnnotationsFieldTest {
         assertEquals(1, annotations.length);
         assertEquals("overwritten-test", ((FieldAnnotation) annotations[0]).value());
     }
+
+    @Test
+    public void shouldDefaultToTypeAnnotation() throws Exception {
+        @FieldAnnotation("type-default")
+        class Target {
+            @SuppressWarnings("unused")
+            public String field;
+        }
+
+        Annotation[] annotations = Annotations.onField(Target.class, "field").getAnnotations();
+
+        assertEquals(1, annotations.length);
+        assertEquals("type-default", ((FieldAnnotation) annotations[0]).value());
+    }
 }
