@@ -1,7 +1,7 @@
 package com.github.t1.stereotypes;
 
 import java.lang.annotation.*;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -10,17 +10,17 @@ import java.util.Map.Entry;
  * getAnnotations()}, etc. on a class object, you call {@link Annotations#on(Class)} and then do everything just the
  * same but on this class.
  */
-public abstract class Annotations {
+public abstract class Annotations implements AnnotatedElement {
 
-    public static Annotations on(Class<?> container) {
+    public static AnnotatedElement on(Class<?> container) {
         return new TypeAnnotations(container);
     }
 
-    public static Annotations onField(Class<?> container, String fieldName) {
+    public static AnnotatedElement onField(Class<?> container, String fieldName) {
         return new FieldAnnotations(container, fieldName);
     }
 
-    public static Annotations onMethod(Class<?> container, String methodName, Class<?>... parameterTypes) {
+    public static AnnotatedElement onMethod(Class<?> container, String methodName, Class<?>... parameterTypes) {
         return new MethodAnnotations(container, methodName, parameterTypes);
     }
 
@@ -184,19 +184,27 @@ public abstract class Annotations {
         return false;
     }
 
+    @Override
     public <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
         if (annotationClass == null)
             throw new NullPointerException();
         return annotationClass.cast(getCache().get(annotationClass));
     }
 
-    public <A extends Annotation> boolean isAnnotationPresent(Class<A> annotationClass) {
+    @Override
+    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
         if (annotationClass == null)
             throw new NullPointerException();
         return getAnnotation(annotationClass) != null;
     }
 
+    @Override
     public Annotation[] getAnnotations() {
         return getCache().values().toArray(new Annotation[getCache().size()]);
+    }
+
+    @Override
+    public Annotation[] getDeclaredAnnotations() {
+        return getAnnotations();
     }
 }
