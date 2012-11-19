@@ -7,6 +7,7 @@ import java.lang.annotation.*;
 
 @Retention(RUNTIME)
 @Target({ FIELD, TYPE, ANNOTATION_TYPE })
+@TargetScope(FIELD)
 public @interface FieldAnnotation {
     public String value() default "default";
 }

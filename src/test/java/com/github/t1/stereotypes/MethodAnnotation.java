@@ -7,6 +7,7 @@ import java.lang.annotation.*;
 
 @Retention(RUNTIME)
 @Target({ METHOD, TYPE, ANNOTATION_TYPE })
+@TargetScope(METHOD)
 public @interface MethodAnnotation {
     public String value() default "default";
 }

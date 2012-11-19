@@ -8,6 +8,15 @@ import org.junit.Test;
 
 public class AnnotationsTypeTest {
 
+    private <T> T find(Class<T> type, Annotation[] annotations) {
+        for (Annotation annotation : annotations) {
+            if (type.isInstance(annotation)) {
+                return type.cast(annotation);
+            }
+        }
+        throw new RuntimeException("not found");
+    }
+
     @Test
     public void directAnnotationShouldBePresent() throws Exception {
         @TypeAnnotation1("test")
@@ -147,8 +156,9 @@ public class AnnotationsTypeTest {
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
-        assertEquals(1, annotations.length);
-        assertTrue(annotations[0] instanceof NoTargetAnnotation);
+        assertEquals(2, annotations.length);
+        assertEquals("no-target", find(NoTargetAnnotation.class, annotations).value());
+        assertEquals("package-type-default", find(TypeAnnotation1.class, annotations).value());
     }
 
     @Test
@@ -226,7 +236,8 @@ public class AnnotationsTypeTest {
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
-        assertEquals(1, annotations.length);
+        assertEquals(2, annotations.length);
+        assertEquals("package-type-default", find(TypeAnnotation1.class, annotations).value());
         assertEquals(99, find(TypeAnnotation2.class, annotations).value());
     }
 
@@ -246,12 +257,14 @@ public class AnnotationsTypeTest {
         assertEquals(10, find(TypeAnnotation4.class, annotations).value());
     }
 
-    private <T> T find(Class<T> type, Annotation[] annotations) {
-        for (Annotation annotation : annotations) {
-            if (type.isInstance(annotation)) {
-                return type.cast(annotation);
-            }
+    @Test
+    public void shouldDefaultToPackageAnnotation() throws Exception {
+        class Target {
         }
-        throw new RuntimeException("not found");
+
+        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
+
+        assertEquals(1, annotations.length);
+        assertEquals("package-type-default", ((TypeAnnotation1) annotations[0]).value());
     }
 }

@@ -6,4 +6,5 @@ import java.lang.annotation.Retention;
 
 @Retention(RUNTIME)
 public @interface NoTargetAnnotation {
+    public String value() default "no-target";
 }

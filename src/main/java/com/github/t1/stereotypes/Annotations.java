@@ -42,21 +42,48 @@ public abstract class Annotations {
 
     private Map<Class<? extends Annotation>, Annotation> resolveDefaults(Class<?> type,
             Map<Class<? extends Annotation>, Annotation> annotations) {
-        for (Annotation annotation : type.getDeclaredAnnotations()) {
-            Class<? extends Annotation> annotationType = annotation.annotationType();
-            if (!annotationType.isAnnotationPresent(Stereotype.class) && allowedAtTarget(annotation)
-                    && !annotations.containsKey(annotationType)) {
-                annotations.put(null, annotation);
-            }
+        for (Annotation typeAnnotation : type.getDeclaredAnnotations()) {
+            resolveDefault(annotations, typeAnnotation);
+        }
+        for (Annotation typeAnnotation : type.getPackage().getDeclaredAnnotations()) {
+            resolveDefault(annotations, typeAnnotation);
         }
         return annotations;
     }
 
+    private void resolveDefault(Map<Class<? extends Annotation>, Annotation> annotations, Annotation annotation) {
+        if (resolvable(annotation) && !annotations.containsKey(annotation.annotationType())) {
+            annotations.put(annotation.annotationType(), annotation);
+        }
+    }
+
+    private boolean resolvable(Annotation annotation) {
+        return !isStereotype(annotation) && allowedAtTarget(annotation);
+    }
+
+    private boolean isStereotype(Annotation annotation) {
+        return annotation.annotationType().isAnnotationPresent(Stereotype.class);
+    }
+
     private boolean allowedAtTarget(Annotation annotation) {
+        ElementType[] targets = getTargetScope(annotation);
+        if (targets == null)
+            return true;
+        return Arrays.asList(targets).contains(getAllowedAnnotationTarget());
+    }
+
+    /**
+     * The {@link ElementType}s of the {@link TargetScope} annotation. Defaults to the {@link ElementType}s of the
+     * {@link Target} annotation. If that also is <code>null</code>, return <code>null</code>.
+     */
+    private ElementType[] getTargetScope(Annotation annotation) {
+        TargetScope targetScope = annotation.annotationType().getAnnotation(TargetScope.class);
+        if (targetScope != null)
+            return targetScope.value();
         Target target = annotation.annotationType().getAnnotation(Target.class);
         if (target == null)
-            return true;
-        return Arrays.asList(target.value()).contains(getAllowedAnnotationTarget());
+            return null;
+        return target.value();
     }
 
     protected abstract ElementType getAllowedAnnotationTarget();
@@ -65,22 +92,22 @@ public abstract class Annotations {
             Annotation[] annotations) {
         Map<Class<? extends Annotation>, Annotation> result = new HashMap<>();
         for (Annotation annotation : annotations) {
-            Class<? extends Annotation> annotationType = annotation.annotationType();
-            if (annotationType.isAnnotationPresent(Stereotype.class)) {
-                inheritAnnotations(annotation, result);
+            if (isStereotype(annotation)) {
+                resolveStereotype(annotation, result);
             } else if (allowedAtTarget(annotation)) {
-                // eventually overwrite inherited annotations
-                result.put(annotationType, propagated(containerAnnotation, annotation));
+                // eventually overwrite stereotype annotations
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                result.put(annotationType, propagatedProperties(containerAnnotation, annotation));
             }
         }
         return result;
     }
 
-    private void inheritAnnotations(Annotation annotation, Map<Class<? extends Annotation>, Annotation> result) {
-        Map<Class<? extends Annotation>, Annotation> inherited = resolveStereotypes(annotation,
+    private void resolveStereotype(Annotation annotation, Map<Class<? extends Annotation>, Annotation> result) {
+        Map<Class<? extends Annotation>, Annotation> resolved = resolveStereotypes(annotation,
                 annotation.annotationType().getAnnotations());
-        // only add inherited annotations that are not overwritten in this level
-        for (Entry<Class<? extends Annotation>, Annotation> entry : inherited.entrySet()) {
+        // only add annotations from steretypes that are not already set at this level
+        for (Entry<Class<? extends Annotation>, Annotation> entry : resolved.entrySet()) {
             if (!result.containsKey(entry.getKey())) {
                 result.put(entry.getKey(), entry.getValue());
             }
@@ -91,7 +118,7 @@ public abstract class Annotations {
      * If there is a method in the container annotation with the same name as a method in the contained annotation, then
      * propagate the value of the container to the contained value (which is only a dummy).
      */
-    private Annotation propagated(Annotation container, Annotation contained) {
+    private Annotation propagatedProperties(Annotation container, Annotation contained) {
         if (container == null)
             return contained;
         AnnotationProxyBuilder proxyBuilder = new AnnotationProxyBuilder(contained);
