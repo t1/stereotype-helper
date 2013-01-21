@@ -6,14 +6,22 @@ import java.util.Map;
 
 class FieldAnnotations extends Annotations {
 
-    private final Field field;
-
-    public FieldAnnotations(Class<?> container, String fieldName) {
+    private static Field getField(Class<?> container, String fieldName) {
         try {
-            this.field = container.getField(fieldName);
+            return container.getField(fieldName);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private final Field field;
+
+    public FieldAnnotations(Class<?> container, String fieldName) {
+        this(getField(container, fieldName));
+    }
+
+    public FieldAnnotations(Field field) {
+        this.field = field;
     }
 
     @Override

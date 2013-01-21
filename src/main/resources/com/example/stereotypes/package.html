@@ -1,26 +1,34 @@
 <body>
 	Helps libraries to support stereotypes, so their users can encapsulate
-	the libraries' annotations into their own, allowing to reuse them.
+	the libraries' annotations into their own.
 
-	<h3>Features Supported</h3>
+	<h3>Terms &amp; Features</h3>
 	<ul>
-		<li>{@link Stereotype} (careful: this is our own type!) works
-			just as with CDI: Inherit the library-annotations on the
-			user-annotation to the site-of-use.
-		<li>Annotation parameters from the user-annotation are propagated
-			into your annotations.
-		<li>Propagate same-type, same-name annotations by annotating the
-			container-method
-		<li>Type, Field, and Method annotations
-		<li>Default annotations on classes and packages
+		<li><code>Library</code>: Defines annotations and handles the
+			effect, e.g. JPA.
+		<li><code>Client Code</code>: Where annotations are placed to
+			have that effect.
+		<li>{@link Stereotype} (careful: this is our own type!): An
+			annotation defined as well as used in client code; allows annotation
+			reuse (i.e. produce less duplication in annotations and work with
+			more consistent and simpler annotations).
+		<li><code>Resolve</code>: To turn Stereotypes to normal
+			annotations.
+		<li><code>Default Annotation</code>: Annotations e.g. on the
+			class level are effective for all methods or fields in the class.
+		<li><code>Propagation</code>: Annotation properties (methods) on
+			the Stereotype are effective on the library-annotations. This works
+			automatically for properties of the same name and type, or can be
+			explicitly configured with {@link PropagetTo} annotations.
 	</ul>
 
-	<h3>Features Not Yet Supported</h3>
+	<h3>Planned Features</h3>
 	<ul>
+		<li>Annotation-indexes
 		<li>PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, and
 			PACKAGE annotations
 		<li>Allow adding library-annotations and properties from (xml?)
 			config files (deployment descriptors)
-		<li>Merge list annotation
+		<li>Merge list annotations
 	</ul>
 </body>

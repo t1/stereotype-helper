@@ -6,14 +6,22 @@ import java.util.Map;
 
 class MethodAnnotations extends Annotations {
 
-    private final Method method;
-
-    public MethodAnnotations(Class<?> container, String methodName, Class<?>... parameterTypes) {
+    private static Method getMethod(Class<?> container, String methodName, Class<?>... parameterTypes) {
         try {
-            this.method = container.getMethod(methodName, parameterTypes);
+            return container.getMethod(methodName, parameterTypes);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private final Method method;
+
+    public MethodAnnotations(Method method) {
+        this.method = method;
+    }
+
+    public MethodAnnotations(Class<?> container, String methodName, Class<?>... parameterTypes) {
+        this(getMethod(container, methodName, parameterTypes));
     }
 
     @Override

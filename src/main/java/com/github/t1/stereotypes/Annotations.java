@@ -7,8 +7,8 @@ import java.util.Map.Entry;
 
 /**
  * This is the main class for the library to read annotations: instead of calling {@link Class#getAnnotations()
- * getAnnotations()}, etc. on a class object, you call {@link Annotations#on(Class)} and then do everything just the
- * same but on this class.
+ * getAnnotations()}, etc. on reflection objects, you call {@link Annotations#on(Class)} and then do everything just the
+ * same with the {@link AnnotatedElement} returned.
  */
 public abstract class Annotations implements AnnotatedElement {
 
@@ -16,8 +16,16 @@ public abstract class Annotations implements AnnotatedElement {
         return new TypeAnnotations(container);
     }
 
+    public static AnnotatedElement on(Field field) {
+        return new FieldAnnotations(field);
+    }
+
     public static AnnotatedElement onField(Class<?> container, String fieldName) {
         return new FieldAnnotations(container, fieldName);
+    }
+
+    public static AnnotatedElement on(Method method) {
+        return new MethodAnnotations(method);
     }
 
     public static AnnotatedElement onMethod(Class<?> container, String methodName, Class<?>... parameterTypes) {
@@ -115,22 +123,22 @@ public abstract class Annotations implements AnnotatedElement {
     }
 
     /**
-     * If there is a method in the container annotation with the same name as a method in the contained annotation, then
-     * propagate the value of the container to the contained value (which is only a dummy).
+     * If there is a property in the container annotation with the same name as a property in the contained annotation,
+     * then propagate the value of the container to the contained value (which is only a dummy).
      */
     private Annotation propagatedProperties(Annotation container, Annotation contained) {
         if (container == null)
             return contained;
         AnnotationProxyBuilder proxyBuilder = new AnnotationProxyBuilder(contained);
-        for (Method method : contained.annotationType().getDeclaredMethods()) {
-            assert method.getReturnType() != Void.TYPE : method + " returns void";
-            assert method.getParameterTypes().length == 0 : method + " takes parameters";
+        for (Method property : contained.annotationType().getDeclaredMethods()) {
+            assert property.getReturnType() != Void.TYPE : property + " returns void";
+            assert property.getParameterTypes().length == 0 : property + " takes parameters";
 
-            Method containerMethod = getContainerMethod(container, method);
-            if (containerMethod == null)
+            Method containerProperty = getContainerProperty(container, property);
+            if (containerProperty == null)
                 continue;
-            Object containerValue = get(container, containerMethod);
-            proxyBuilder.overwrite(method, containerValue);
+            Object containerValue = get(container, containerProperty);
+            proxyBuilder.overwrite(property, containerValue);
         }
         return proxyBuilder.build();
     }
@@ -143,41 +151,41 @@ public abstract class Annotations implements AnnotatedElement {
         }
     }
 
-    private Method getContainerMethod(Annotation container, Method annotationMethod) {
-        for (Method containerMethod : container.annotationType().getDeclaredMethods()) {
-            assert containerMethod.getReturnType() != Void.TYPE : containerMethod + " returns void";
-            assert containerMethod.getParameterTypes().length == 0 : containerMethod + " takes parameters";
+    private Method getContainerProperty(Annotation container, Method annotationProperty) {
+        for (Method containerProperty : container.annotationType().getDeclaredMethods()) {
+            assert containerProperty.getReturnType() != Void.TYPE : containerProperty + " returns void";
+            assert containerProperty.getParameterTypes().length == 0 : containerProperty + " takes parameters";
 
-            if (matches(annotationMethod, containerMethod)) {
-                return containerMethod;
+            if (matchesPropagation(annotationProperty, containerProperty)) {
+                return containerProperty;
             }
         }
         return null;
     }
 
-    private boolean matches(Method annotationMethod, Method containerMethod) {
-        String name = propagatedName(annotationMethod);
-        Class<?> returnType = annotationMethod.getReturnType();
-        if (!name.equals(propagatedName(containerMethod)))
+    private boolean matchesPropagation(Method annotationProperty, Method containerProperty) {
+        String name = propagatedName(annotationProperty);
+        Class<?> returnType = annotationProperty.getReturnType();
+        if (!name.equals(propagatedName(containerProperty)))
             return false;
-        if (!returnType.equals(containerMethod.getReturnType()))
+        if (!returnType.equals(containerProperty.getReturnType()))
             return false;
-        return matchesPropagatedType(annotationMethod, containerMethod);
+        return matchesPropagatedType(annotationProperty, containerProperty);
     }
 
-    private String propagatedName(Method containerMethod) {
-        PropagateTo propagateTo = containerMethod.getAnnotation(PropagateTo.class);
+    private String propagatedName(Method containerProperty) {
+        PropagateTo propagateTo = containerProperty.getAnnotation(PropagateTo.class);
         if (propagateTo == null || "".equals(propagateTo.name()))
-            return containerMethod.getName();
+            return containerProperty.getName();
         return propagateTo.name();
     }
 
-    private boolean matchesPropagatedType(Method annotationMethod, Method containerMethod) {
-        PropagateTo propagateTo = containerMethod.getAnnotation(PropagateTo.class);
+    private boolean matchesPropagatedType(Method annotationProperty, Method containerProperty) {
+        PropagateTo propagateTo = containerProperty.getAnnotation(PropagateTo.class);
         if (propagateTo == null)
             return true;
         for (Class<? extends Annotation> matchingType : propagateTo.value()) {
-            if (annotationMethod.getDeclaringClass() == matchingType) {
+            if (annotationProperty.getDeclaringClass() == matchingType) {
                 return true;
             }
         }
