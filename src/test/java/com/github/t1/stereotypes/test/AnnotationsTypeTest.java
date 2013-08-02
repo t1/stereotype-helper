@@ -22,8 +22,7 @@ public class AnnotationsTypeTest {
     @Test
     public void directAnnotationShouldBePresent() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
@@ -33,8 +32,7 @@ public class AnnotationsTypeTest {
     @Test(expected = NullPointerException.class)
     public void nullAnnotationShouldThrowNPE() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         Annotations.on(Target.class).isAnnotationPresent(null);
     }
@@ -42,8 +40,7 @@ public class AnnotationsTypeTest {
     @Test
     public void missingAnnotationShouldNotBePresent() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         boolean present = Annotations.on(Target.class).isAnnotationPresent(Retention.class);
 
@@ -53,8 +50,7 @@ public class AnnotationsTypeTest {
     @Test
     public void stereotypeAnnotationShouldNotBePresent() throws Exception {
         @TypeStereotype
-        class Target {
-        }
+        class Target {}
 
         boolean present = Annotations.on(Target.class).isAnnotationPresent(Stereotype.class);
 
@@ -64,8 +60,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldGetDirectAnnotation() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
@@ -75,8 +70,7 @@ public class AnnotationsTypeTest {
     @Test(expected = NullPointerException.class)
     public void gettingNullAnnotationShouldThrowNPE() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         Annotations.on(Target.class).getAnnotation(null);
     }
@@ -84,8 +78,7 @@ public class AnnotationsTypeTest {
     @Test
     public void missingAnnotationShouldGetNull() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         Retention annotation = Annotations.on(Target.class).getAnnotation(Retention.class);
 
@@ -95,8 +88,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldGetDirectAnnotations() throws Exception {
         @TypeAnnotation1("test")
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -107,8 +99,7 @@ public class AnnotationsTypeTest {
     @Test
     public void expandedAnnotationShouldBePresent() throws Exception {
         @TypeStereotype()
-        class Target {
-        }
+        class Target {}
 
         boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
@@ -118,8 +109,7 @@ public class AnnotationsTypeTest {
     @Test
     public void indirectlyExpandedAnnotationShouldBePresent() throws Exception {
         @IndirectTestStereotype
-        class Target {
-        }
+        class Target {}
 
         boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
@@ -129,8 +119,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldGetExpandedAnnotations() throws Exception {
         @TypeStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -141,8 +130,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldGetDoubleIndirectAnnotations() throws Exception {
         @IndirectTestStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -153,8 +141,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldNotExpandTargetAnnotation() throws Exception {
         @NoTargetStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -167,8 +154,7 @@ public class AnnotationsTypeTest {
     public void shouldOverwriteExpandedAnnotationValues() throws Exception {
         @TypeAnnotation1("overwritten-test")
         @TypeStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -180,8 +166,7 @@ public class AnnotationsTypeTest {
     public void shouldOverwriteDoubleExpandedAnnotationValues() throws Exception {
         @TypeAnnotation1("overwritten-test")
         @IndirectTestStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -192,8 +177,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldExpandMetaOrTypeStereotype() throws Exception {
         @MetaStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -207,8 +191,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldGetOverwritingDefault() throws Exception {
         @OverwritingStereotype
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -220,8 +203,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldGetOverwrittenOverwriting() throws Exception {
         @OverwritingStereotype(value = "passed-in", number = 5)
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -233,8 +215,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldNotGetDefaultConflictingReturnTypeOverwrite() throws Exception {
         @OverwritingStereotype2
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -246,8 +227,7 @@ public class AnnotationsTypeTest {
     @Test
     public void shouldResolveConflictingReturnTypeOverwrite() throws Exception {
         @TypeConflictStereotype(value = 10, value2 = 20)
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
@@ -261,8 +241,7 @@ public class AnnotationsTypeTest {
 
     @Test
     public void shouldDefaultToPackageAnnotation() throws Exception {
-        class Target {
-        }
+        class Target {}
 
         Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
 
