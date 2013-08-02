@@ -1,13 +1,12 @@
-package com.github.t1.stereotypes;
+package com.github.t1.stereotypes.test;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-@Stereotype
-@FieldAnnotation("stereotype-test")
 @Retention(RUNTIME)
-@Target({ FIELD, ANNOTATION_TYPE })
-public @interface FieldStereotype {
+@Target(TYPE)
+public @interface TypeAnnotation3 {
+    public int value() default 3;
 }

@@ -1,4 +1,4 @@
-package com.github.t1.stereotypes;
+package com.github.t1.stereotypes.test;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -8,8 +8,9 @@ import java.lang.annotation.*;
 import com.github.t1.stereotypes.Stereotype;
 
 @Stereotype
+@TypeAnnotation1("meta-test")
+@MetaOrTypeAnnotation
 @Retention(RUNTIME)
 @Target(TYPE)
-@NoTargetAnnotation
-public @interface NoTargetStereotype {
+public @interface MetaStereotype {
 }

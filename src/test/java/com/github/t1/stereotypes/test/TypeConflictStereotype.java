@@ -1,4 +1,4 @@
-package com.github.t1.stereotypes;
+package com.github.t1.stereotypes.test;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -6,6 +6,8 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.*;
 
 import javax.annotation.Generated;
+
+import com.github.t1.stereotypes.*;
 
 @Stereotype
 @TypeAnnotation1("stereotype-test")

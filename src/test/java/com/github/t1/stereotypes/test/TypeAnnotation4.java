@@ -1,4 +1,4 @@
-package com.github.t1.stereotypes;
+package com.github.t1.stereotypes.test;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -7,8 +7,6 @@ import java.lang.annotation.*;
 
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface TypeAnnotation1 {
-    public String value() default "";
-
-    public int number() default 1;
+public @interface TypeAnnotation4 {
+    public int value() default 4;
 }

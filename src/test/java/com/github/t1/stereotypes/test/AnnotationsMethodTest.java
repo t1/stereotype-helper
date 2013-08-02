@@ -1,10 +1,12 @@
-package com.github.t1.stereotypes;
+package com.github.t1.stereotypes.test;
 
 import static org.junit.Assert.*;
 
 import java.lang.annotation.*;
 
 import org.junit.Test;
+
+import com.github.t1.stereotypes.*;
 
 public class AnnotationsMethodTest {
     @Test
