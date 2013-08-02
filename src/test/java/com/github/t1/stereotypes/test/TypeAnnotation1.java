@@ -6,7 +6,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.*;
 
 @Retention(RUNTIME)
-@Target(TYPE)
+@Target({ TYPE, PACKAGE })
 public @interface TypeAnnotation1 {
     public String value() default "";
 

@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 import com.github.t1.stereotypes.TargetScope;
 
 @Retention(RUNTIME)
-@Target({ METHOD, TYPE, ANNOTATION_TYPE })
+@Target({ METHOD, TYPE, ANNOTATION_TYPE, PACKAGE })
 @TargetScope(METHOD)
 public @interface MethodAnnotation {
     public String value() default "default";
