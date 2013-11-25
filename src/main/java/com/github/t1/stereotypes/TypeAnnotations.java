@@ -7,6 +7,8 @@ class TypeAnnotations extends Annotations {
     private final Class<?> container;
 
     public TypeAnnotations(Class<?> container) {
+        if (container == null)
+            throw new NullPointerException("container class must not be null");
         this.container = container;
     }
 
