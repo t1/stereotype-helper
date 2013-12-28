@@ -17,6 +17,17 @@
 		<maven>3.0.4</maven>
 	</prerequisites>
 
+	<scm>
+		<developerConnection>scm:git:git://github.com/t1/stereotype-helper</developerConnection>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>bintray-t1-javaee-helpers-stereotype-helper</id>
+			<name>t1-javaee-helpers-stereotype-helper</name>
+			<url>https://api.bintray.com/maven/t1/javaee-helpers/stereotype-helper</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
