@@ -10,7 +10,7 @@ import com.github.t1.stereotypes.*;
 
 public class AnnotationsFieldTest {
     @Test
-    public void directAnnotationShouldBePresent() throws Exception {
+    public void directAnnotationShouldBePresent() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -22,7 +22,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullAnnotationShouldThrowNPE() throws Exception {
+    public void nullAnnotationShouldThrowNPE() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -32,7 +32,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void missingAnnotationShouldNotBePresent() throws Exception {
+    public void missingAnnotationShouldNotBePresent() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -44,7 +44,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void stereotypeAnnotationShouldNotBePresent() throws Exception {
+    public void stereotypeAnnotationShouldNotBePresent() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -56,7 +56,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldGetDirectAnnotation() throws Exception {
+    public void shouldGetDirectAnnotation() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -68,7 +68,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void gettingNullAnnotationShouldThrowNPE() throws Exception {
+    public void gettingNullAnnotationShouldThrowNPE() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -78,7 +78,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void missingAnnotationShouldGetNull() throws Exception {
+    public void missingAnnotationShouldGetNull() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -90,7 +90,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldGetDirectAnnotations() throws Exception {
+    public void shouldGetDirectAnnotations() {
         class Target {
             @FieldAnnotation
             public String field;
@@ -103,7 +103,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void expandedAnnotationShouldBePresent() throws Exception {
+    public void expandedAnnotationShouldBePresent() {
         class Target {
             @FieldStereotype
             public String field;
@@ -115,7 +115,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void indirectlyExpandedAnnotationShouldBePresent() throws Exception {
+    public void indirectlyExpandedAnnotationShouldBePresent() {
         class Target {
             @IndirectFieldStereotype
             public String field;
@@ -127,7 +127,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldGetExpandedAnnotations() throws Exception {
+    public void shouldGetExpandedAnnotations() {
         class Target {
             @FieldStereotype
             public String field;
@@ -140,7 +140,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldGetDoubleIndirectAnnotations() throws Exception {
+    public void shouldGetDoubleIndirectAnnotations() {
         class Target {
             @IndirectFieldStereotype
             public String field;
@@ -153,7 +153,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldOverwriteExpandedAnnotationValues() throws Exception {
+    public void shouldOverwriteExpandedAnnotationValues() {
         class Target {
             @FieldAnnotation("overwritten-test")
             @FieldStereotype
@@ -167,7 +167,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldOverwriteDoubleExpandedAnnotationValues() throws Exception {
+    public void shouldOverwriteDoubleExpandedAnnotationValues() {
         class Target {
             @FieldAnnotation("overwritten-test")
             @IndirectFieldStereotype
@@ -181,7 +181,7 @@ public class AnnotationsFieldTest {
     }
 
     @Test
-    public void shouldDefaultToTypeAnnotation() throws Exception {
+    public void shouldDefaultToTypeAnnotation() {
         @FieldAnnotation("type-default")
         class Target {
             @SuppressWarnings("unused")

@@ -10,7 +10,7 @@ import com.github.t1.stereotypes.*;
 
 public class AnnotationsMethodTest {
     @Test
-    public void directAnnotationShouldBePresent() throws Exception {
+    public void directAnnotationShouldBePresent() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -24,7 +24,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullAnnotationShouldThrowNPE() throws Exception {
+    public void nullAnnotationShouldThrowNPE() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -36,7 +36,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void missingAnnotationShouldNotBePresent() throws Exception {
+    public void missingAnnotationShouldNotBePresent() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -50,7 +50,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void stereotypeAnnotationShouldNotBePresent() throws Exception {
+    public void stereotypeAnnotationShouldNotBePresent() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -64,7 +64,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldGetDirectAnnotation() throws Exception {
+    public void shouldGetDirectAnnotation() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -72,13 +72,14 @@ public class AnnotationsMethodTest {
             }
         }
 
-        MethodAnnotation annotation = Annotations.onMethod(Target.class, "method").getAnnotation(MethodAnnotation.class);
+        MethodAnnotation annotation =
+                Annotations.onMethod(Target.class, "method").getAnnotation(MethodAnnotation.class);
 
         assertEquals("default", annotation.value());
     }
 
     @Test
-    public void shouldGetDirectAnnotationWithArg() throws Exception {
+    public void shouldGetDirectAnnotationWithArg() {
         class Target {
             @MethodAnnotation
             public String method(String arg) {
@@ -86,14 +87,14 @@ public class AnnotationsMethodTest {
             }
         }
 
-        MethodAnnotation annotation = Annotations.onMethod(Target.class, "method", String.class).getAnnotation(
-                MethodAnnotation.class);
+        MethodAnnotation annotation =
+                Annotations.onMethod(Target.class, "method", String.class).getAnnotation(MethodAnnotation.class);
 
         assertEquals("default", annotation.value());
     }
 
     @Test
-    public void shouldGetDirectAnnotationWithMultipleMethods() throws Exception {
+    public void shouldGetDirectAnnotationWithMultipleMethods() {
         class Target {
             @MethodAnnotation
             public String method1(String arg) {
@@ -106,19 +107,19 @@ public class AnnotationsMethodTest {
             }
         }
 
-        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(
-                MethodAnnotation.class);
+        MethodAnnotation annotation1 =
+                Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(MethodAnnotation.class);
 
         assertEquals("default", annotation1.value());
 
-        MethodAnnotation annotation2 = Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(
-                MethodAnnotation.class);
+        MethodAnnotation annotation2 =
+                Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(MethodAnnotation.class);
 
         assertEquals("default", annotation2.value());
     }
 
     @Test
-    public void shouldGetDirectAnnotationWithMultipleArgs() throws Exception {
+    public void shouldGetDirectAnnotationWithMultipleArgs() {
         class Target {
             @MethodAnnotation
             public String method(String arg0, int arg1) {
@@ -126,14 +127,15 @@ public class AnnotationsMethodTest {
             }
         }
 
-        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "method", String.class, Integer.TYPE).getAnnotation(
-                MethodAnnotation.class);
+        MethodAnnotation annotation1 =
+                Annotations.onMethod(Target.class, "method", String.class, Integer.TYPE).getAnnotation(
+                        MethodAnnotation.class);
 
         assertEquals("default", annotation1.value());
     }
 
     @Test
-    public void shouldGetDirectAnnotationMultipleMethodsWithSameName() throws Exception {
+    public void shouldGetDirectAnnotationMultipleMethodsWithSameName() {
         class Target {
             @MethodAnnotation
             public String method(String arg) {
@@ -146,19 +148,19 @@ public class AnnotationsMethodTest {
             }
         }
 
-        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "method", String.class).getAnnotation(
-                MethodAnnotation.class);
+        MethodAnnotation annotation1 =
+                Annotations.onMethod(Target.class, "method", String.class).getAnnotation(MethodAnnotation.class);
 
         assertEquals("default", annotation1.value());
 
-        MethodAnnotation annotation2 = Annotations.onMethod(Target.class, "method", Integer.class).getAnnotation(
-                MethodAnnotation.class);
+        MethodAnnotation annotation2 =
+                Annotations.onMethod(Target.class, "method", Integer.class).getAnnotation(MethodAnnotation.class);
 
         assertEquals("default", annotation2.value());
     }
 
     @Test(expected = NullPointerException.class)
-    public void gettingNullAnnotationShouldThrowNPE() throws Exception {
+    public void gettingNullAnnotationShouldThrowNPE() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -170,7 +172,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void missingAnnotationShouldGetNull() throws Exception {
+    public void missingAnnotationShouldGetNull() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -184,7 +186,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldGetDirectAnnotations() throws Exception {
+    public void shouldGetDirectAnnotations() {
         class Target {
             @MethodAnnotation
             public String method() {
@@ -199,7 +201,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void expandedAnnotationShouldBePresent() throws Exception {
+    public void expandedAnnotationShouldBePresent() {
         class Target {
             @MethodStereotype
             public String method() {
@@ -213,7 +215,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void indirectlyExpandedAnnotationShouldBePresent() throws Exception {
+    public void indirectlyExpandedAnnotationShouldBePresent() {
         class Target {
             @IndirectMethodStereotype
             public String method() {
@@ -227,7 +229,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldGetExpandedAnnotations() throws Exception {
+    public void shouldGetExpandedAnnotations() {
         class Target {
             @MethodStereotype
             public String method() {
@@ -242,7 +244,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldGetDoubleIndirectAnnotations() throws Exception {
+    public void shouldGetDoubleIndirectAnnotations() {
         class Target {
             @IndirectMethodStereotype
             public String method() {
@@ -257,7 +259,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldOverwriteExpandedAnnotationValues() throws Exception {
+    public void shouldOverwriteExpandedAnnotationValues() {
         class Target {
             @MethodAnnotation("overwritten-test")
             @MethodStereotype
@@ -273,7 +275,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldOverwriteDoubleExpandedAnnotationValues() throws Exception {
+    public void shouldOverwriteDoubleExpandedAnnotationValues() {
         class Target {
             @MethodAnnotation("overwritten-test")
             @IndirectMethodStereotype
@@ -289,7 +291,7 @@ public class AnnotationsMethodTest {
     }
 
     @Test
-    public void shouldDefaultToTypeAnnotation() throws Exception {
+    public void shouldDefaultToTypeAnnotation() {
         @MethodAnnotation("type-default")
         class Target {
             @SuppressWarnings("unused")
