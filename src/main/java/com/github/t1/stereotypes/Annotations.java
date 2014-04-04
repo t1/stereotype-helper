@@ -53,8 +53,11 @@ public abstract class Annotations implements AnnotatedElement {
         for (Annotation typeAnnotation : type.getDeclaredAnnotations()) {
             resolveDefault(annotations, typeAnnotation);
         }
-        for (Annotation typeAnnotation : type.getPackage().getDeclaredAnnotations()) {
-            resolveDefault(annotations, typeAnnotation);
+        Package package_ = type.getPackage();
+        if (package_ != null) {
+            for (Annotation typeAnnotation : package_.getDeclaredAnnotations()) {
+                resolveDefault(annotations, typeAnnotation);
+            }
         }
         return annotations;
     }
@@ -112,8 +115,8 @@ public abstract class Annotations implements AnnotatedElement {
     }
 
     private void resolveStereotype(Annotation annotation, Map<Class<? extends Annotation>, Annotation> result) {
-        Map<Class<? extends Annotation>, Annotation> resolved = resolveStereotypes(annotation,
-                annotation.annotationType().getAnnotations());
+        Map<Class<? extends Annotation>, Annotation> resolved =
+                resolveStereotypes(annotation, annotation.annotationType().getAnnotations());
         // only add annotations from steretypes that are not already set at this level
         for (Entry<Class<? extends Annotation>, Annotation> entry : resolved.entrySet()) {
             if (!result.containsKey(entry.getKey())) {
