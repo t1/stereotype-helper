@@ -4,9 +4,11 @@ import static org.junit.Assert.*;
 
 import java.lang.annotation.*;
 
+import javax.enterprise.inject.Stereotype;
+
 import org.junit.Test;
 
-import com.github.t1.stereotypes.*;
+import com.github.t1.stereotypes.Annotations;
 
 public class AnnotationsTypeTest {
 

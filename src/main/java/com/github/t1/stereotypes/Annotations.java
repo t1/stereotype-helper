@@ -11,6 +11,17 @@ import java.util.Map.Entry;
  * same with the {@link AnnotatedElement} returned.
  */
 public abstract class Annotations implements AnnotatedElement {
+    private static final Class<? extends Annotation> STEREOTYPE = initStereotype();
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Annotation> initStereotype() {
+        try {
+            return (Class<? extends Annotation>) Class.forName("javax.enterprise.inject.Stereotype");
+        } catch (ClassNotFoundException e) {
+            System.err.println("no @Stereotype class found in classpath");
+            return null;
+        }
+    }
 
     public static AnnotatedElement on(Class<?> container) {
         return new TypeAnnotations(container);
@@ -73,7 +84,9 @@ public abstract class Annotations implements AnnotatedElement {
     }
 
     private boolean isStereotype(Annotation annotation) {
-        return annotation.annotationType().isAnnotationPresent(Stereotype.class);
+        if (STEREOTYPE == null)
+            return false;
+        return annotation.annotationType().isAnnotationPresent(STEREOTYPE);
     }
 
     private boolean allowedAtTarget(Annotation annotation) {

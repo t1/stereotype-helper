@@ -5,7 +5,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.*;
 
-import com.github.t1.stereotypes.Stereotype;
+import javax.enterprise.inject.Stereotype;
 
 @MethodStereotype()
 @Stereotype

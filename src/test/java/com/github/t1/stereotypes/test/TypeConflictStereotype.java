@@ -6,8 +6,9 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.*;
 
 import javax.annotation.Generated;
+import javax.enterprise.inject.Stereotype;
 
-import com.github.t1.stereotypes.*;
+import com.github.t1.stereotypes.PropagateTo;
 
 @Stereotype
 @TypeAnnotation1("stereotype-test")
