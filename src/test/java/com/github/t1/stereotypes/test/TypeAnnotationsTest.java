@@ -142,26 +142,24 @@ public class TypeAnnotationsTest {
 
     @Test
     public void shouldOverwriteExpandedAnnotationValues() {
-        @TypeAnnotation1("overwritten-test")
         @TypeStereotype
+        @TypeAnnotation1("overwritten-test")
         class Target {}
 
-        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
+        TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
-        assertEquals(1, annotations.length);
-        assertEquals("overwritten-test", ((TypeAnnotation1) annotations[0]).value());
+        assertEquals("overwritten-test", annotation.value());
     }
 
     @Test
     public void shouldOverwriteDoubleExpandedAnnotationValues() {
-        @TypeAnnotation1("overwritten-test")
         @IndirectTestStereotype
+        @TypeAnnotation1("overwritten-test")
         class Target {}
 
-        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
+        TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
-        assertEquals(1, annotations.length);
-        assertEquals("overwritten-test", ((TypeAnnotation1) annotations[0]).value());
+        assertEquals("overwritten-test", annotation.value());
     }
 
     @Test
@@ -233,9 +231,8 @@ public class TypeAnnotationsTest {
     public void shouldDefaultToPackageAnnotation() {
         class Target {}
 
-        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
+        TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
-        assertEquals(1, annotations.length);
-        assertEquals("package-type-default", ((TypeAnnotation1) annotations[0]).value());
+        assertEquals("package-type-default", annotation.value());
     }
 }

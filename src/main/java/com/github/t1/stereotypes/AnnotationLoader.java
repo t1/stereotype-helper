@@ -38,7 +38,10 @@ public class AnnotationLoader {
             if (isStereotype(annotation)) {
                 log.debug("  resolve stereotype {}", annotation);
                 resolveStereotypes(annotation, annotation.annotationType());
-            } else if (allowedAtTarget(annotation)) {
+            }
+        }
+        for (Annotation annotation : annotated.getAnnotations()) {
+            if (!isStereotype(annotation) && allowedAtTarget(annotation)) {
                 // eventually overwrite stereotype annotations
                 Annotation propagated = propagatedProperties(containerAnnotation, annotation);
                 result.put(annotation.annotationType(), propagated);
