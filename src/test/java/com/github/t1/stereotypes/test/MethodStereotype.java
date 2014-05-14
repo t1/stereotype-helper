@@ -10,6 +10,5 @@ import javax.enterprise.inject.Stereotype;
 @Stereotype
 @MethodAnnotation("stereotype-test")
 @Retention(RUNTIME)
-@Target({ METHOD, ANNOTATION_TYPE })
-public @interface MethodStereotype {
-}
+@Target({ METHOD, TYPE, ANNOTATION_TYPE })
+public @interface MethodStereotype {}

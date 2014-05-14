@@ -1,0 +1,300 @@
+package com.github.t1.stereotypes.test;
+
+import static org.junit.Assert.*;
+
+import java.lang.annotation.Retention;
+import java.lang.reflect.AnnotatedElement;
+
+import javax.enterprise.inject.Stereotype;
+
+import org.junit.Test;
+
+import com.github.t1.stereotypes.Annotations;
+
+@SuppressWarnings("unused")
+public class MethodAnnotationsTest {
+    @Test
+    public void directAnnotationShouldBePresent() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(MethodAnnotation.class);
+
+        assertTrue(present);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullAnnotationShouldThrowNPE() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        Annotations.onMethod(Target.class, "foo").isAnnotationPresent(null);
+    }
+
+    @Test
+    public void missingAnnotationShouldNotBePresent() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(Retention.class);
+
+        assertFalse(present);
+    }
+
+    @Test
+    public void stereotypeAnnotationShouldNotBePresent() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(Stereotype.class);
+
+        assertFalse(present);
+    }
+
+    @Test
+    public void shouldGetDirectAnnotation() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
+
+        assertEquals("default", annotation.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationWithArg() {
+        class Target {
+            @MethodAnnotation
+            public void foo(String arg) {}
+        }
+
+        MethodAnnotation annotation =
+                Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
+
+        assertEquals("default", annotation.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationWithMultipleMethods() {
+        class Target {
+            @MethodAnnotation
+            public String method1(String arg) {
+                return arg;
+            }
+
+            @MethodAnnotation
+            public String method2(String arg) {
+                return arg;
+            }
+        }
+
+        MethodAnnotation annotation1 =
+                Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(MethodAnnotation.class);
+
+        assertEquals("default", annotation1.value());
+
+        MethodAnnotation annotation2 =
+                Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(MethodAnnotation.class);
+
+        assertEquals("default", annotation2.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationWithMultipleArgs() {
+        class Target {
+            @MethodAnnotation
+            public String foo(String arg0, int arg1) {
+                return arg0 + arg1;
+            }
+        }
+
+        MethodAnnotation annotation1 =
+                Annotations.onMethod(Target.class, "foo", String.class, Integer.TYPE).getAnnotation(
+                        MethodAnnotation.class);
+
+        assertEquals("default", annotation1.value());
+    }
+
+    @Test
+    public void shouldGetDirectAnnotationMultipleMethodsWithSameName() {
+        class Target {
+            @MethodAnnotation
+            public String foo(String arg) {
+                return arg;
+            }
+
+            @MethodAnnotation
+            public Integer foo(Integer arg) {
+                return arg;
+            }
+        }
+
+        MethodAnnotation annotation1 =
+                Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
+
+        assertEquals("default", annotation1.value());
+
+        MethodAnnotation annotation2 =
+                Annotations.onMethod(Target.class, "foo", Integer.class).getAnnotation(MethodAnnotation.class);
+
+        assertEquals("default", annotation2.value());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void gettingNullAnnotationShouldThrowNPE() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        Annotations.onMethod(Target.class, "foo").getAnnotation(null);
+    }
+
+    @Test
+    public void missingAnnotationShouldGetNull() {
+        class Target {
+            @MethodAnnotation
+            public void foo() {}
+        }
+
+        Retention annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(Retention.class);
+
+        assertNull(annotation);
+    }
+
+    @Test
+    public void expandedAnnotationShouldBePresent() {
+        class Target {
+            @MethodStereotype
+            public void foo() {}
+        }
+
+        boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(MethodAnnotation.class);
+
+        assertTrue(present);
+    }
+
+    @Test
+    public void indirectlyExpandedAnnotationShouldBePresent() {
+        class Target {
+            @IndirectMethodStereotype
+            public void foo() {}
+        }
+
+        boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(MethodAnnotation.class);
+
+        assertTrue(present);
+    }
+
+    @Test
+    public void shouldGetStereotypeAnnotation() {
+        class Target {
+            @MethodStereotype
+            public void foo() {}
+        }
+
+        MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
+
+        assertEquals("stereotype-test", annotation.value());
+    }
+
+    @Test
+    public void shouldGetDoubleIndirectAnnotations() {
+        class Target {
+            @IndirectMethodStereotype
+            public void foo() {}
+        }
+
+        MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
+
+        assertEquals("stereotype-test", annotation.value());
+    }
+
+    @Test
+    public void shouldOverwriteExpandedAnnotationValues() {
+        class Target {
+            @MethodStereotype
+            @MethodAnnotation("overwritten-test")
+            public void foo() {}
+        }
+
+        MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
+
+        assertEquals("overwritten-test", annotation.value());
+    }
+
+    @Test
+    public void shouldOverwriteDoubleExpandedAnnotationValues() {
+        class Target {
+            @IndirectMethodStereotype
+            @MethodAnnotation("overwritten-test")
+            public void foo() {}
+        }
+
+        MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
+
+        assertEquals("overwritten-test", annotation.value());
+    }
+
+    @Test
+    public void shouldDefaultToTypeAnnotation() {
+        @MethodAnnotation("type-default")
+        class Target {
+            public void foo() {}
+        }
+
+        MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
+
+        assertEquals("type-default", annotation.value());
+    }
+
+    @Test
+    public void shouldInheritMethodAnnotationFromPackage() {
+        class Target {
+            public void foo() {}
+        }
+
+        AnnotatedElement onMethod = Annotations.onMethod(Target.class, "foo");
+
+        MethodAnnotation methodAnnotation = onMethod.getAnnotation(MethodAnnotation.class);
+
+        assertEquals("package-method-default", methodAnnotation.value());
+    }
+
+    @Test
+    public void shouldInheritMethodAnnotationFromTypeStereotype() {
+        @MethodStereotype
+        class Target {
+            public void foo() {}
+        }
+
+        AnnotatedElement onMethod = Annotations.onMethod(Target.class, "foo");
+
+        MethodAnnotation methodAnnotation = onMethod.getAnnotation(MethodAnnotation.class);
+
+        assertEquals("stereotype-test", methodAnnotation.value());
+    }
+
+    @Test
+    public void shouldInheritMethodAnnotationFromPackageStereotype() {
+        class Target {
+            public void foo() {}
+        }
+
+        AnnotatedElement onMethod = Annotations.onMethod(Target.class, "foo");
+
+        MethodAnnotation2 methodAnnotation = onMethod.getAnnotation(MethodAnnotation2.class);
+
+        assertEquals("package-stereotype", methodAnnotation.value());
+    }
+}

@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.github.t1.stereotypes.Annotations;
 
-public class AnnotationsTypeTest {
+public class TypeAnnotationsTest {
 
     private <T> T find(Class<T> type, Annotation[] annotations) {
         for (Annotation annotation : annotations) {
@@ -88,17 +88,6 @@ public class AnnotationsTypeTest {
     }
 
     @Test
-    public void shouldGetDirectAnnotations() {
-        @TypeAnnotation1("test")
-        class Target {}
-
-        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
-
-        assertEquals(1, annotations.length);
-        assertEquals("test", ((TypeAnnotation1) annotations[0]).value());
-    }
-
-    @Test
     public void expandedAnnotationShouldBePresent() {
         @TypeStereotype()
         class Target {}
@@ -106,6 +95,17 @@ public class AnnotationsTypeTest {
         boolean present = Annotations.on(Target.class).isAnnotationPresent(TypeAnnotation1.class);
 
         assertTrue(present);
+    }
+
+    @Test
+    public void shouldGetStereotypedAnnotation() {
+        @TypeStereotype()
+        class Target {}
+
+        TypeAnnotation1 present = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
+
+        assertEquals(1, present.number());
+        assertEquals("stereotype-test", present.value());
     }
 
     @Test
@@ -119,25 +119,13 @@ public class AnnotationsTypeTest {
     }
 
     @Test
-    public void shouldGetExpandedAnnotations() {
-        @TypeStereotype
-        class Target {}
-
-        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
-
-        assertEquals(1, annotations.length);
-        assertEquals("stereotype-test", ((TypeAnnotation1) annotations[0]).value());
-    }
-
-    @Test
     public void shouldGetDoubleIndirectAnnotations() {
         @IndirectTestStereotype
         class Target {}
 
-        Annotation[] annotations = Annotations.on(Target.class).getAnnotations();
+        TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
-        assertEquals(1, annotations.length);
-        assertEquals("stereotype-test", ((TypeAnnotation1) annotations[0]).value());
+        assertEquals("stereotype-test", annotation.value());
     }
 
     @Test

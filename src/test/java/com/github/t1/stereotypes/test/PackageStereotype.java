@@ -8,7 +8,8 @@ import java.lang.annotation.*;
 import javax.enterprise.inject.Stereotype;
 
 @Stereotype
-@FieldAnnotation("stereotype-test")
 @Retention(RUNTIME)
-@Target({ FIELD, TYPE, ANNOTATION_TYPE })
-public @interface FieldStereotype {}
+@Target({ METHOD, TYPE, ANNOTATION_TYPE, PACKAGE })
+@MethodAnnotation2("package-stereotype")
+@FieldAnnotation2("package-stereotype")
+public @interface PackageStereotype {}
