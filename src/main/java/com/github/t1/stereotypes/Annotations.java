@@ -12,43 +12,43 @@ import org.slf4j.*;
  */
 public abstract class Annotations implements AnnotatedElement {
     public static AnnotatedElement on(Class<?> container) {
-        return new TypeAnnotations(container);
+        return TypeAnnotations.onType(container);
     }
 
     public static AnnotatedElement on(Field field) {
-        return new FieldAnnotations(field);
+        return FieldAnnotations.onField(field);
     }
 
     public static AnnotatedElement onField(Class<?> container, String fieldName) {
-        return new FieldAnnotations(container, fieldName);
+        return FieldAnnotations.onField(container, fieldName);
     }
 
     public static AnnotatedElement on(Method method) {
-        return new MethodAnnotations(method);
+        return MethodAnnotations.onMethod(method);
     }
 
     public static AnnotatedElement onMethod(Class<?> container, String methodName, Class<?>... parameterTypes) {
-        return new MethodAnnotations(container, methodName, parameterTypes);
+        return MethodAnnotations.onMethod(container, methodName, parameterTypes);
     }
 
     private static final Logger log = LoggerFactory.getLogger(Annotations.class);
 
     private final AnnotatedElement annotated;
     private final Class<?> container;
-    private AnnotationMap annotationCache;
+    private final AnnotationMap annotations;
 
     public Annotations(AnnotatedElement annotated, Class<?> container) {
         this.annotated = annotated;
         this.container = container;
+
+        this.annotations = loadAnnotations();
     }
 
-    private synchronized AnnotationMap getAnnotationMap() {
-        if (annotationCache == null) {
-            log.debug("resolve annotations on {}", annotated);
-            annotationCache = new AnnotationLoader(annotated, container, getAllowedAnnotationTarget()).get();
-            log.debug("resolved annotations: {}", annotationCache);
-        }
-        return annotationCache;
+    private AnnotationMap loadAnnotations() {
+        log.debug("resolve annotations on {}", annotated);
+        AnnotationMap annotations = new AnnotationLoader(annotated, container, getAllowedAnnotationTarget()).get();
+        log.debug("resolved annotations: {}", annotations);
+        return annotations;
     }
 
     protected abstract ElementType getAllowedAnnotationTarget();
@@ -57,7 +57,7 @@ public abstract class Annotations implements AnnotatedElement {
     public <A extends Annotation> A getAnnotation(Class<A> type) {
         if (type == null)
             throw new NullPointerException();
-        return getAnnotationMap().get(type);
+        return annotations.get(type);
     }
 
     @Override
@@ -69,7 +69,7 @@ public abstract class Annotations implements AnnotatedElement {
 
     @Override
     public Annotation[] getAnnotations() {
-        return getAnnotationMap().toArray();
+        return annotations.toArray();
     }
 
     @Override
