@@ -34,19 +34,16 @@ public abstract class Annotations implements AnnotatedElement {
     private static final Logger log = LoggerFactory.getLogger(Annotations.class);
 
     private final AnnotatedElement annotated;
-    private final Class<?> container;
     private final AnnotationMap annotations;
 
-    public Annotations(AnnotatedElement annotated, Class<?> container) {
+    public Annotations(AnnotatedElement annotated) {
         this.annotated = annotated;
-        this.container = container;
-
         this.annotations = loadAnnotations();
     }
 
     private AnnotationMap loadAnnotations() {
         log.debug("resolve annotations on {}", annotated);
-        AnnotationMap annotations = new AnnotationLoader(annotated, container, getAllowedAnnotationTarget()).get();
+        AnnotationMap annotations = new AnnotationLoader(annotated, getAllowedAnnotationTarget()).get();
         log.debug("resolved annotations: {}", annotations);
         return annotations;
     }

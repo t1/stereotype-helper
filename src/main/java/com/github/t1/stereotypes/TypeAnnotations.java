@@ -17,9 +17,7 @@ class TypeAnnotations extends Annotations {
     }
 
     TypeAnnotations(Class<?> container) {
-        super(container, container);
-        if (container == null)
-            throw new NullPointerException("container class must not be null");
+        super(container);
     }
 
     @Override

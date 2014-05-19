@@ -25,21 +25,40 @@ public class AnnotationLoader {
 
     private final AnnotationMap result = new AnnotationMap();
 
-    public AnnotationLoader(AnnotatedElement annotated, Class<?> container, ElementType allowedTarget) {
+    public AnnotationLoader(AnnotatedElement annotated, ElementType allowedTarget) {
         this.allowedTarget = allowedTarget;
-        resolvePackageStereotypes(null, annotated);
-        resolveDeclaringMemberStereotypes(null, annotated);
-        resolveStereotypes(null, annotated);
-        resolveDefaults(container);
+        resolve(declaringType(annotated).getPackage());
+        resolve(declaringType(annotated));
+        resolve(annotated);
     }
 
-    private void resolveStereotypes(Annotation containerAnnotation, AnnotatedElement annotated) {
+    private Class<?> declaringType(AnnotatedElement annotated) {
+        if (annotated instanceof Member) {
+            Member member = (Member) annotated;
+            return member.getDeclaringClass();
+        }
+        return (Class<?>) annotated;
+    }
+
+    private void resolve(AnnotatedElement annotated) {
+        resolve(null, annotated);
+    }
+
+    private void resolve(Annotation containerAnnotation, AnnotatedElement annotated) {
+        resolveStereotypes(annotated);
+        resolveAnnotations(containerAnnotation, annotated);
+    }
+
+    private void resolveStereotypes(AnnotatedElement annotated) {
         for (Annotation annotation : annotated.getAnnotations()) {
             if (isStereotype(annotation)) {
                 log.debug("  resolve stereotype {}", annotation);
-                resolveStereotypes(annotation, annotation.annotationType());
+                resolve(annotation, annotation.annotationType());
             }
         }
+    }
+
+    private void resolveAnnotations(Annotation containerAnnotation, AnnotatedElement annotated) {
         for (Annotation annotation : annotated.getAnnotations()) {
             if (!isStereotype(annotation) && allowedAtTarget(annotation)) {
                 // eventually overwrite stereotype annotations
@@ -145,47 +164,6 @@ public class AnnotationLoader {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void resolveDeclaringMemberStereotypes(Annotation containerAnnotation, AnnotatedElement annotated) {
-        if (annotated instanceof Member) {
-            Member member = (Member) annotated;
-            resolveStereotypes(containerAnnotation, member.getDeclaringClass());
-        }
-    }
-
-    private void resolvePackageStereotypes(Annotation containerAnnotation, AnnotatedElement annotated) {
-        Class<?> type;
-        if (annotated instanceof Member) {
-            Member member = (Member) annotated;
-            type = member.getDeclaringClass();
-        } else {
-            type = (Class<?>) annotated;
-        }
-        AnnotatedElement pkg = type.getPackage();
-        resolveStereotypes(containerAnnotation, pkg);
-    }
-
-    private void resolveDefaults(Class<?> type) {
-        for (Annotation typeAnnotation : type.getDeclaredAnnotations()) {
-            resolveDefault(typeAnnotation);
-        }
-        Package package_ = type.getPackage();
-        if (package_ != null) {
-            for (Annotation typeAnnotation : package_.getDeclaredAnnotations()) {
-                resolveDefault(typeAnnotation);
-            }
-        }
-    }
-
-    private void resolveDefault(Annotation annotation) {
-        if (resolvable(annotation) && !result.containsKey(annotation.annotationType())) {
-            result.put(annotation.annotationType(), annotation);
-        }
-    }
-
-    private boolean resolvable(Annotation annotation) {
-        return !isStereotype(annotation) && allowedAtTarget(annotation);
     }
 
     public AnnotationMap get() {

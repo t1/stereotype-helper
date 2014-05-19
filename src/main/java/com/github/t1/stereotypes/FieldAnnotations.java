@@ -29,7 +29,7 @@ class FieldAnnotations extends Annotations {
     }
 
     private FieldAnnotations(Field field) {
-        super(field, field.getDeclaringClass());
+        super(field);
     }
 
     @Override

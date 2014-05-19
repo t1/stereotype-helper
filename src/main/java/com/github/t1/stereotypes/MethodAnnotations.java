@@ -29,7 +29,7 @@ class MethodAnnotations extends Annotations {
     }
 
     private MethodAnnotations(Method method) {
-        super(method, method.getDeclaringClass());
+        super(method);
     }
 
     private MethodAnnotations(Class<?> container, String methodName, Class<?>... parameterTypes) {
