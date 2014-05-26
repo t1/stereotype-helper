@@ -1,13 +1,15 @@
 package com.github.t1.stereotypes.test;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 import static org.junit.Assert.*;
 
-import java.lang.annotation.Retention;
+import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
 
 import javax.enterprise.inject.Stereotype;
 
-import org.junit.Test;
+import org.junit.*;
 
 import com.github.t1.stereotypes.Annotations;
 
@@ -296,5 +298,65 @@ public class MethodAnnotationsTest {
         MethodAnnotation2 methodAnnotation = onMethod.getAnnotation(MethodAnnotation2.class);
 
         assertEquals("package-stereotype", methodAnnotation.value());
+    }
+
+    @Retention(RUNTIME)
+    @Target({ METHOD })
+    private @interface NonInheritedMethodAnnotation {
+        String value();
+    }
+
+    @Test
+    @Ignore("not implemented, yet")
+    public void shouldNotInheritNonInheritedMethodAnnotation() {
+        class Super {
+            @NonInheritedMethodAnnotation("super-method")
+            public void foo() {}
+        }
+        class Sub extends Super {}
+
+        NonInheritedMethodAnnotation annotation =
+                Annotations.onMethod(Sub.class, "foo").getAnnotation(NonInheritedMethodAnnotation.class);
+
+        assertNull(annotation);
+    }
+
+    @Retention(RUNTIME)
+    @Target({ METHOD })
+    @Inherited
+    private @interface InheritedMethodAnnotation {
+        String value();
+    }
+
+    @Test
+    public void shouldInheritMethodAnnotation() {
+        class Super {
+            @InheritedMethodAnnotation("super-method")
+            public void foo() {}
+        }
+        class Sub extends Super {}
+
+        InheritedMethodAnnotation annotation =
+                Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
+
+        assertEquals("super-method", annotation.value());
+    }
+
+    @Test
+    @Ignore("not implemented, yet")
+    public void shouldInheritOverriddenMethodAnnotation() {
+        class Super {
+            @InheritedMethodAnnotation("super-method")
+            public void foo() {}
+        }
+        class Sub extends Super {
+            @Override
+            public void foo() {}
+        }
+
+        InheritedMethodAnnotation annotation =
+                Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
+
+        assertEquals("super-method", annotation.value());
     }
 }

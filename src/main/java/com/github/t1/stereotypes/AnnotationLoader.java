@@ -27,8 +27,11 @@ public class AnnotationLoader {
 
     public AnnotationLoader(AnnotatedElement annotated, ElementType allowedTarget) {
         this.allowedTarget = allowedTarget;
-        resolve(declaringType(annotated).getPackage());
-        resolve(declaringType(annotated));
+
+        Class<?> declaringType = declaringType(annotated);
+        resolve(declaringType.getPackage());
+        inherit(declaringType);
+        resolve(declaringType);
         resolve(annotated);
     }
 
@@ -38,6 +41,12 @@ public class AnnotationLoader {
             return member.getDeclaringClass();
         }
         return (Class<?>) annotated;
+    }
+
+    private void inherit(Class<?> annotated) {
+        for (Class<?> interfac : annotated.getInterfaces()) {
+            resolve(interfac);
+        }
     }
 
     private void resolve(AnnotatedElement annotated) {

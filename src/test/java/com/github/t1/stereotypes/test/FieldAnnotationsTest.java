@@ -233,4 +233,7 @@ public class FieldAnnotationsTest {
 
         assertEquals("package-stereotype", fieldAnnotation.value());
     }
+
+    // a test for @Inherited annotations on a field doesn't make a lot of sense,
+    // as an inherited field is still the same... you can't override it.
 }

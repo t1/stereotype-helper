@@ -1,12 +1,14 @@
 package com.github.t1.stereotypes.test;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 import static org.junit.Assert.*;
 
 import java.lang.annotation.*;
 
 import javax.enterprise.inject.Stereotype;
 
-import org.junit.Test;
+import org.junit.*;
 
 import com.github.t1.stereotypes.Annotations;
 
@@ -234,5 +236,73 @@ public class TypeAnnotationsTest {
         TypeAnnotation1 annotation = Annotations.on(Target.class).getAnnotation(TypeAnnotation1.class);
 
         assertEquals("package-type-default", annotation.value());
+    }
+
+    @Retention(RUNTIME)
+    @Target({ TYPE })
+    private @interface NonInheritedTypeAnnotation {
+        String value();
+    }
+
+    @Test
+    public void shouldNotInheritNonInheritedAnnotation() {
+        @InheritedTypeAnnotation("super")
+        class Super {}
+        class Sub extends Super {}
+
+        NonInheritedTypeAnnotation annotation =
+                Annotations.on(Sub.class).getAnnotation(NonInheritedTypeAnnotation.class);
+
+        assertNull(annotation);
+    }
+
+    @Retention(RUNTIME)
+    @Target({ TYPE })
+    @Inherited
+    private @interface InheritedTypeAnnotation {
+        String value();
+    }
+
+    @Test
+    public void shouldInheritTypeAnnotation() {
+        @InheritedTypeAnnotation("super-type")
+        class Super {}
+        class Sub extends Super {}
+
+        InheritedTypeAnnotation annotation = Annotations.on(Sub.class).getAnnotation(InheritedTypeAnnotation.class);
+
+        assertEquals("super-type", annotation.value());
+    }
+
+    @InheritedTypeAnnotation("super-interface")
+    private interface InheritedAnnotationInterface {}
+
+    @Test
+    public void shouldInheritInterfaceAnnotation() {
+        class Sub implements InheritedAnnotationInterface {}
+
+        InheritedTypeAnnotation annotation = Annotations.on(Sub.class).getAnnotation(InheritedTypeAnnotation.class);
+
+        assertEquals("super-interface", annotation.value());
+    }
+
+    @Stereotype
+    @Retention(RUNTIME)
+    @Target({ TYPE })
+    @Inherited
+    @InheritedTypeAnnotation("interface-stereotype")
+    private @interface InheritedStereotype {}
+
+    @InheritedStereotype
+    private interface InheritedStereotypeInterface {}
+
+    @Test
+    @Ignore("not really implemented, yet")
+    public void shouldInheritStereotypeFromInterface() {
+        class Sub implements InheritedStereotypeInterface {}
+
+        InheritedTypeAnnotation annotation = Annotations.on(Sub.class).getAnnotation(InheritedTypeAnnotation.class);
+
+        assertEquals("interface-stereotype", annotation.value());
     }
 }
