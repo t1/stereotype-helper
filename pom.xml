@@ -3,7 +3,7 @@
 
     <groupId>com.github.t1</groupId>
     <artifactId>stereotype-helper</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>Stereotype Helper</name>
     <description>Helps libraries to support stereotypes, so their users can encapsulate the libraries' annotations into their own, allowing to reuse them.</description>
 
@@ -18,7 +18,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/t1/stereotype-helper</developerConnection>
-        <tag>stereotype-helper-1.0.3</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
