@@ -1,4 +1,4 @@
-# About #
+# About [![Dependency Status](https://www.versioneye.com/user/projects/53fb94f2e09da317ca000650/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53fb94f2e09da317ca000650)
 
 Helps libraries to support stereotypes, so their users can encapsulate the libraries' annotations into their own, allowing to reuse them.
 
