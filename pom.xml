@@ -67,7 +67,7 @@
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <scope>provided</scope>
             <optional>true</optional><!-- we only need @Stereotype, and even that is optional -->
         </dependency>
