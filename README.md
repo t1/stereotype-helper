@@ -1,4 +1,4 @@
-# About [ ![Download](https://api.bintray.com/packages/t1/javaee-helpers/stereotype-helper/images/download.png) ](https://bintray.com/t1/javaee-helpers/stereotype-helper/_latestVersion) [![Dependency Status](https://www.versioneye.com/user/projects/53fb94f2e09da317ca000650/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53fb94f2e09da317ca000650)
+# About [ ![Download](https://api.bintray.com/packages/t1/javaee-helpers/stereotype-helper/images/download.png) ](https://bintray.com/t1/javaee-helpers/stereotype-helper/_latestVersion) [![Dependency Status](https://www.versioneye.com/user/projects/53fb94f2e09da317ca000650/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53fb94f2e09da317ca000650) [![Build Status](https://travis-ci.org/t1/stereotype-helper.svg?branch=master)](https://travis-ci.org/t1/stereotype-helper)
 
 Helps libraries to support stereotypes, so their users can encapsulate the libraries' annotations into their own, allowing to reuse them.
 
