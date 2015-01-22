@@ -15,10 +15,3 @@ Start learning the usage at the Annotations class.
 * `Default Annotation`: Annotations e.g. on the class level are effective for all methods or fields in the class.
 * `Propagation`: Annotation properties (methods) on the Stereotype are effective on the library-annotations. This works automatically for properties of the same name and type, or can be explicitly configured with {@link PropagetTo} annotations.
 * `Inheritance`: Types inherit the annotations of their super class if the annotation itself is annotated as `@Inherited`. This should also be true for all interfaces implemented.
-
-## Ideas ##
-* Support annotation processors
-* Annotation-indexes
-* PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, and PACKAGE annotations
-* Injecting annotations and properties from (xml?) config files (deployment descriptors)
-* Merge list annotations
