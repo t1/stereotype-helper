@@ -71,6 +71,6 @@ public abstract class Annotations implements AnnotatedElement {
 
     @Override
     public Annotation[] getDeclaredAnnotations() {
-        return getAnnotations();
+        return annotated.getDeclaredAnnotations();
     }
 }

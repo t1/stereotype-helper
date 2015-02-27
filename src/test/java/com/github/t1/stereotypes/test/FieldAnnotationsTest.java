@@ -2,8 +2,8 @@ package com.github.t1.stereotypes.test;
 
 import static org.junit.Assert.*;
 
-import java.lang.annotation.Retention;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 
 import javax.enterprise.inject.Stereotype;
 
@@ -20,6 +20,20 @@ public class FieldAnnotationsTest {
         }
 
         boolean present = Annotations.onField(Target.class, "field").isAnnotationPresent(FieldAnnotation.class);
+
+        assertTrue(present);
+    }
+
+    @Test
+    public void directAnnotationShouldBePresentByField() throws ReflectiveOperationException {
+        class Target {
+            @FieldAnnotation
+            public String field;
+        }
+
+        Field field = Target.class.getDeclaredField("field");
+
+        boolean present = Annotations.on(field).isAnnotationPresent(FieldAnnotation.class);
 
         assertTrue(present);
     }
@@ -192,7 +206,7 @@ public class FieldAnnotationsTest {
     }
 
     @Test
-    public void shouldInheritFieldAnnotationFromTypeStereotype() {
+    public void shouldDefaultAndResolveFromType() {
         @FieldStereotype
         class Target {
             @SuppressWarnings("unused")
@@ -207,7 +221,7 @@ public class FieldAnnotationsTest {
     }
 
     @Test
-    public void shouldInheritFieldAnnotationFromPackage() {
+    public void shouldDefaultFromPackage() {
         class Target {
             @SuppressWarnings("unused")
             public String foo;
@@ -221,7 +235,7 @@ public class FieldAnnotationsTest {
     }
 
     @Test
-    public void shouldInheritFieldAnnotationFromPackageStereotype() {
+    public void shouldDefaultAndResolveFromPackage() {
         class Target {
             @SuppressWarnings("unused")
             public String foo;
@@ -236,4 +250,17 @@ public class FieldAnnotationsTest {
 
     // a test for @Inherited annotations on a field doesn't make a lot of sense,
     // as an inherited field is still the same... you can't override it.
+
+    @Test
+    public void shouldReturnOnlyDirectAnnotationAsDeclared() {
+        class Target {
+            @FieldAnnotation
+            public String field;
+        }
+
+        Annotation[] annotations = Annotations.onField(Target.class, "field").getDeclaredAnnotations();
+
+        assertEquals(1, annotations.length);
+        assertEquals("default", ((FieldAnnotation) annotations[0]).value());
+    }
 }
