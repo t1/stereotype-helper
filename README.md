@@ -8,7 +8,6 @@ The main entry point is the Annotations class.
 
 # Tutorial #
 
-<<<<<<< HEAD
 ## Setup ##
 
 Add a dependency:
@@ -130,19 +129,3 @@ Annotations on a package are effective for all classes, methods, and fields in t
 ## Annotation Inheritance From Interfaces ##
 
 In Java, classes inherit the annotations of their super class if the annotation itself is annotated as `@Inherited`. `stereotype-helper` does that for all _interfaces_ implemented, too.
-
-## Ideas ##
-* Support annotation processors
-* Annotation-indexes
-* PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, and PACKAGE annotations
-* Injecting annotations and properties from (xml?) config files (deployment descriptors)
-* Merge list annotations
-=======
-* `Library`: Defines annotations and handles the effect, e.g. JPA.
-* `Client Code`: Where annotations are placed to have that effect.
-* {@link Stereotype} (careful: this is our own type!): An annotation defined as well as used in client code; allows annotation reuse (i.e. produce less duplication in annotations and work with more consistent and simpler annotations).
-* `Resolve`: To turn Stereotypes to normal annotations.
-* `Default Annotation`: Annotations e.g. on the class level are effective for all methods or fields in the class.
-* `Propagation`: Annotation properties (methods) on the Stereotype are effective on the library-annotations. This works automatically for properties of the same name and type, or can be explicitly configured with {@link PropagetTo} annotations.
-* `Inheritance`: Types inherit the annotations of their super class if the annotation itself is annotated as `@Inherited`. This should also be true for all interfaces implemented.
->>>>>>> origin/master
