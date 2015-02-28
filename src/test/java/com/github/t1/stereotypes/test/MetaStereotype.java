@@ -12,5 +12,4 @@ import javax.enterprise.inject.Stereotype;
 @MetaOrTypeAnnotation
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface MetaStereotype {
-}
+public @interface MetaStereotype {}
