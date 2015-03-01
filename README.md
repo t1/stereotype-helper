@@ -12,7 +12,7 @@ The main entry point is the Annotations class.
 
 Add a dependency:
 
-```java
+```xml
 <dependency>
     <groupId>com.github.t1</groupId>
     <artifactId>stereotype-helper</artifactId>
