@@ -12,7 +12,7 @@ The main entry point is the Annotations class.
 
 Add a dependency:
 
-```
+```java
 <dependency>
     <groupId>com.github.t1</groupId>
     <artifactId>stereotype-helper</artifactId>
@@ -22,11 +22,11 @@ Add a dependency:
 
 Where `latestVersion` is [![Download](https://api.bintray.com/packages/t1/javaee-helpers/stereotype-helper/images/download.png) ](https://bintray.com/t1/javaee-helpers/stereotype-helper/_latestVersion) (you can also download it from there).
 
-## Reflecting on Annotations ##
+## The Basics: Reflecting on Annotations ##
 
 Say you have an annotated field:
 
-```
+```java
 class Target {
     @FieldAnnotation
     public String field;
@@ -35,7 +35,7 @@ class Target {
 
 Without `stereotype-helper`, your code to check the presence of the annotation would look like this:
 
-```
+```java
 Field field = Target.class.getDeclaredField("field");
 boolean present = field.isAnnotationPresent(FieldAnnotation.class);
 
@@ -43,7 +43,7 @@ boolean present = field.isAnnotationPresent(FieldAnnotation.class);
 
 With `stereotype-helper`, you'd use the `Annotations` class, instead:
 
-```
+```java
 Field field = Target.class.getDeclaredField("field");
 boolean present = Annotations.on(field).isAnnotationPresent(FieldAnnotation.class);
 
@@ -51,7 +51,7 @@ boolean present = Annotations.on(field).isAnnotationPresent(FieldAnnotation.clas
 
 There's a shortcut for those two lines:
 
-```
+```java
 boolean present = Annotations.onField(Target.class, "field")
     .isAnnotationPresent(FieldAnnotation.class);
 ```
@@ -66,7 +66,7 @@ Stereotypes are a part of CDI to group annotations into reusable roles. But they
 
 First let's define a stereotype:
 
-```
+```java
 @Transactional
 @MyAnnotation
 @Stereotype
@@ -79,7 +79,7 @@ public @interface Action {}
 
 Now use this stereotype like this:
 
-```
+```java
 class Type {
     @Action
     public void myMethod() {
@@ -90,7 +90,7 @@ class Type {
 
 ... and this should be true:
 
-```
+```java
 Annotations.onMethod(Type.class, "myMethod").isAnnotationPresent(MyAnnotation.class);
 ```
 
@@ -102,7 +102,7 @@ Note that this resolution is recursive, i.e. it works also for stereotypes that 
 
 Say you have an annotation with a property like this:
 
-```
+```java
 public @interface Color {
     public String value() default "none";
 }
@@ -110,7 +110,7 @@ public @interface Color {
 
 ... and a stereotype like this:
 
-```
+```java
 @Color("red")
 @Stereotype
 public @interface Red {
@@ -118,7 +118,7 @@ public @interface Red {
 }
 ```
 
-... then calling `...getAnnotation(Color.class).value()` on something annotated as `@Red` will return `red` (which is not the case for stereotypes in CDI). Even more important, an annotation `@Red("strawberry")` would turn out as `strawberry`, i.e. the property is propagated from the stereotype to the annotation. For this to work, the name as well as the type of the property must match, or you can explicitly configure it with {@link PropagetTo}. One stereotype property can also be propagated to multiple annotations.
+... then calling `...getAnnotation(Color.class).value()` on something annotated as `@Red` will return `red` (which is generally not the case for stereotypes in CDI). Even more important, an annotation `@Red("strawberry")` would turn out as `strawberry`, i.e. the property is propagated from the stereotype to the annotation. For this to work, the name as well as the type of the property must match, or you can explicitly configure it with {@link PropagetTo}. One stereotype property can also be propagated to multiple annotations.
 
 ## Default Annotations ##
 
