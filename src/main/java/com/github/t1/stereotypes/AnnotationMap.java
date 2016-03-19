@@ -5,29 +5,17 @@ import java.util.*;
 import java.util.Map.Entry;
 
 class AnnotationMap implements Iterable<Map.Entry<Class<? extends Annotation>, Annotation>> {
-    Map<Class<? extends Annotation>, Annotation> map = new HashMap<>();
+    private Map<Class<? extends Annotation>, Annotation> map = new HashMap<>();
 
-    public boolean containsKey(Class<? extends Annotation> type) {
-        return map.containsKey(type);
-    }
-
-    public void put(Class<? extends Annotation> type, Annotation annotation) {
+    void put(Class<? extends Annotation> type, Annotation annotation) {
         map.put(type, annotation);
     }
 
-    public void merge(AnnotationMap resolved) {
-        for (Map.Entry<Class<? extends Annotation>, Annotation> entry : resolved) {
-            if (!containsKey(entry.getKey())) {
-                put(entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
-    public <T extends Annotation> T get(Class<T> type) {
+    <T extends Annotation> T get(Class<T> type) {
         return type.cast(map.get(type));
     }
 
-    public Annotation[] toArray() {
+    Annotation[] toArray() {
         return map.values().toArray(new Annotation[map.size()]);
     }
 

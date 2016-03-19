@@ -1,22 +1,33 @@
 package com.github.t1.stereotypes.test;
 
+import com.github.t1.stereotypes.Annotations;
+import org.junit.*;
+
+import javax.enterprise.inject.Stereotype;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 import static org.junit.Assert.*;
 
-import java.lang.annotation.*;
-import java.lang.reflect.AnnotatedElement;
-
-import javax.enterprise.inject.Stereotype;
-
-import org.junit.*;
-
-import com.github.t1.stereotypes.Annotations;
-
 @SuppressWarnings("unused")
 public class MethodAnnotationsTest {
     @Test
-    public void directAnnotationShouldBePresent() {
+    public void directAnnotationShouldBePresent() throws NoSuchMethodException {
+        class Target {
+            @SuppressWarnings("WeakerAccess") @MethodAnnotation
+            public void foo() {}
+        }
+        Method method = Target.class.getMethod("foo");
+
+        boolean present = Annotations.on(method).isAnnotationPresent(MethodAnnotation.class);
+
+        assertTrue(present);
+    }
+
+    @Test
+    public void directAnnotationOnMethodShouldBePresent() {
         class Target {
             @MethodAnnotation
             public void foo() {}

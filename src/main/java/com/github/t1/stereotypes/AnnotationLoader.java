@@ -1,13 +1,15 @@
 package com.github.t1.stereotypes;
 
+import org.slf4j.*;
+
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.Arrays;
 
-import org.slf4j.*;
-
-public class AnnotationLoader {
+class AnnotationLoader {
     private static final Class<? extends Annotation> STEREOTYPE = initStereotype();
+
+    private static final Logger log = LoggerFactory.getLogger(AnnotationLoader.class);
 
     @SuppressWarnings("unchecked")
     private static Class<? extends Annotation> initStereotype() {
@@ -19,13 +21,11 @@ public class AnnotationLoader {
         }
     }
 
-    private static final Logger log = LoggerFactory.getLogger(AnnotationLoader.class);
-
     private final ElementType allowedTarget;
 
     private final AnnotationMap result = new AnnotationMap();
 
-    public AnnotationLoader(AnnotatedElement annotated, ElementType allowedTarget) {
+    AnnotationLoader(AnnotatedElement annotated, ElementType allowedTarget) {
         this.allowedTarget = allowedTarget;
 
         Class<?> declaringType = declaringType(annotated);
@@ -44,8 +44,8 @@ public class AnnotationLoader {
     }
 
     private void inherit(Class<?> annotated) {
-        for (Class<?> interfac : annotated.getInterfaces()) {
-            resolve(interfac);
+        for (Class<?> interface_ : annotated.getInterfaces()) {
+            resolve(interface_);
         }
     }
 
@@ -175,7 +175,7 @@ public class AnnotationLoader {
         }
     }
 
-    public AnnotationMap get() {
+    AnnotationMap get() {
         return result;
     }
 }

@@ -16,7 +16,7 @@ class TypeAnnotations extends Annotations {
         return result;
     }
 
-    TypeAnnotations(Class<?> container) {
+    private TypeAnnotations(Class<?> container) {
         super(container);
     }
 

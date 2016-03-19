@@ -32,10 +32,6 @@ class MethodAnnotations extends Annotations {
         super(method);
     }
 
-    private MethodAnnotations(Class<?> container, String methodName, Class<?>... parameterTypes) {
-        this(getMethod(container, methodName, parameterTypes));
-    }
-
     @Override
     protected ElementType getAllowedAnnotationTarget() {
         return ElementType.METHOD;
