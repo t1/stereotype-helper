@@ -7,9 +7,9 @@ import java.lang.reflect.*;
 import java.util.Arrays;
 
 class AnnotationLoader {
-    private static final Class<? extends Annotation> STEREOTYPE = initStereotype();
-
     private static final Logger log = LoggerFactory.getLogger(AnnotationLoader.class);
+
+    private static final Class<? extends Annotation> STEREOTYPE = initStereotype();
 
     @SuppressWarnings("unchecked")
     private static Class<? extends Annotation> initStereotype() {
