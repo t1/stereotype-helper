@@ -6,3 +6,4 @@ target/
 jmeter.log
 
 stereotype-helper.iml
+.idea/
