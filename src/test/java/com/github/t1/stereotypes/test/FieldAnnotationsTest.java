@@ -1,5 +1,6 @@
 package com.github.t1.stereotypes.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import java.lang.annotation.*;
@@ -7,10 +8,12 @@ import java.lang.reflect.*;
 
 import javax.enterprise.inject.Stereotype;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import com.github.t1.stereotypes.Annotations;
 
+@SuppressWarnings("unused")
 public class FieldAnnotationsTest {
     @Test
     public void directAnnotationShouldBePresent() {
@@ -21,7 +24,17 @@ public class FieldAnnotationsTest {
 
         boolean present = Annotations.onField(Target.class, "field").isAnnotationPresent(FieldAnnotation.class);
 
-        assertTrue(present);
+        assertThat(present).isTrue();
+    }
+
+    @Test
+    public void shouldFailWithUndefinedField() {
+        try {
+            Annotations.onField(Target.class, "undefined");
+            Assertions.fail("expected RuntimeException");
+        } catch (RuntimeException e) {
+            assertThat(e).isInstanceOf(RuntimeException.class).hasCauseInstanceOf(NoSuchFieldException.class);
+        }
     }
 
     @Test
@@ -81,7 +94,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotation = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("default", annotation.value());
+        assertThat(annotation.value()).isEqualTo("default");
     }
 
     @Test(expected = NullPointerException.class)
@@ -103,7 +116,7 @@ public class FieldAnnotationsTest {
 
         Retention annotation = Annotations.onField(Target.class, "field").getAnnotation(Retention.class);
 
-        assertNull(annotation);
+        assertThat(annotation).isNull();
     }
 
     @Test
@@ -115,7 +128,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotation = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("default", annotation.value());
+        assertThat(annotation.value()).isEqualTo("default");
     }
 
     @Test
@@ -151,7 +164,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotations = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("stereotype-test", annotations.value());
+        assertThat(annotations.value()).isEqualTo("stereotype-test");
     }
 
     @Test
@@ -163,7 +176,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotation = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("stereotype-test", annotation.value());
+        assertThat(annotation.value()).isEqualTo("stereotype-test");
     }
 
     @Test
@@ -176,7 +189,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotations = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("overwritten-test", annotations.value());
+        assertThat(annotations.value()).isEqualTo("overwritten-test");
     }
 
     @Test
@@ -189,7 +202,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotation = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("overwritten-test", annotation.value());
+        assertThat(annotation.value()).isEqualTo("overwritten-test");
     }
 
     @Test
@@ -202,7 +215,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation annotation = Annotations.onField(Target.class, "field").getAnnotation(FieldAnnotation.class);
 
-        assertEquals("type-default", annotation.value());
+        assertThat(annotation.value()).isEqualTo("type-default");
     }
 
     @Test
@@ -217,7 +230,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation fieldAnnotation = onField.getAnnotation(FieldAnnotation.class);
 
-        assertEquals("stereotype-test", fieldAnnotation.value());
+        assertThat(fieldAnnotation.value()).isEqualTo("stereotype-test");
     }
 
     @Test
@@ -231,7 +244,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation fieldAnnotation = onField.getAnnotation(FieldAnnotation.class);
 
-        assertEquals("package-field-default", fieldAnnotation.value());
+        assertThat(fieldAnnotation.value()).isEqualTo("package-field-default");
     }
 
     @Test
@@ -245,7 +258,7 @@ public class FieldAnnotationsTest {
 
         FieldAnnotation2 fieldAnnotation = onField.getAnnotation(FieldAnnotation2.class);
 
-        assertEquals("package-stereotype", fieldAnnotation.value());
+        assertThat(fieldAnnotation.value()).isEqualTo("package-stereotype");
     }
 
     // a test for @Inherited annotations on a field doesn't make a lot of sense,
@@ -260,7 +273,7 @@ public class FieldAnnotationsTest {
 
         Annotation[] annotations = Annotations.onField(Target.class, "field").getDeclaredAnnotations();
 
-        assertEquals(1, annotations.length);
-        assertEquals("default", ((FieldAnnotation) annotations[0]).value());
+        assertThat(annotations.length).isEqualTo(1);
+        assertThat(((FieldAnnotation) annotations[0]).value()).isEqualTo("default");
     }
 }

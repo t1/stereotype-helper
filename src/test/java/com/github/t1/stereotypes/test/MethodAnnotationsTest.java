@@ -1,23 +1,29 @@
 package com.github.t1.stereotypes.test;
 
-import com.github.t1.stereotypes.Annotations;
-import org.junit.*;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
-import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-import static org.junit.Assert.*;
+import javax.enterprise.inject.Stereotype;
+
+import org.assertj.core.api.Assertions;
+import org.junit.*;
+
+import com.github.t1.stereotypes.Annotations;
 
 @SuppressWarnings("unused")
 public class MethodAnnotationsTest {
     @Test
     public void directAnnotationShouldBePresent() throws NoSuchMethodException {
         class Target {
-            @SuppressWarnings("WeakerAccess") @MethodAnnotation
-            public void foo() {}
+            @SuppressWarnings("WeakerAccess")
+            @MethodAnnotation
+            public void foo() {
+            }
         }
         Method method = Target.class.getMethod("foo");
 
@@ -27,10 +33,21 @@ public class MethodAnnotationsTest {
     }
 
     @Test
+    public void shouldFailWithUndefinedField() {
+        try {
+            Annotations.onMethod(Target.class, "undefined");
+            Assertions.fail("expected RuntimeException");
+        } catch (RuntimeException e) {
+            assertThat(e).isInstanceOf(RuntimeException.class).hasCauseInstanceOf(NoSuchMethodException.class);
+        }
+    }
+
+    @Test
     public void directAnnotationOnMethodShouldBePresent() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(MethodAnnotation.class);
@@ -42,7 +59,8 @@ public class MethodAnnotationsTest {
     public void nullAnnotationShouldThrowNPE() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         Annotations.onMethod(Target.class, "foo").isAnnotationPresent(null);
@@ -52,7 +70,8 @@ public class MethodAnnotationsTest {
     public void missingAnnotationShouldNotBePresent() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(Retention.class);
@@ -64,7 +83,8 @@ public class MethodAnnotationsTest {
     public void stereotypeAnnotationShouldNotBePresent() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(Stereotype.class);
@@ -76,25 +96,27 @@ public class MethodAnnotationsTest {
     public void shouldGetDirectAnnotation() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation.value());
+        assertThat(annotation.value()).isEqualTo("default");
     }
 
     @Test
     public void shouldGetDirectAnnotationWithArg() {
         class Target {
             @MethodAnnotation
-            public void foo(String arg) {}
+            public void foo(String arg) {
+            }
         }
 
         MethodAnnotation annotation =
                 Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation.value());
+        assertThat(annotation.value()).isEqualTo("default");
     }
 
     @Test
@@ -114,12 +136,12 @@ public class MethodAnnotationsTest {
         MethodAnnotation annotation1 =
                 Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation1.value());
+        assertThat(annotation1.value()).isEqualTo("default");
 
         MethodAnnotation annotation2 =
                 Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation2.value());
+        assertThat(annotation2.value()).isEqualTo("default");
     }
 
     @Test
@@ -131,11 +153,10 @@ public class MethodAnnotationsTest {
             }
         }
 
-        MethodAnnotation annotation1 =
-                Annotations.onMethod(Target.class, "foo", String.class, Integer.TYPE).getAnnotation(
-                        MethodAnnotation.class);
+        MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "foo", String.class, Integer.TYPE)
+                .getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation1.value());
+        assertThat(annotation1.value()).isEqualTo("default");
     }
 
     @Test
@@ -155,19 +176,20 @@ public class MethodAnnotationsTest {
         MethodAnnotation annotation1 =
                 Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation1.value());
+        assertThat(annotation1.value()).isEqualTo("default");
 
         MethodAnnotation annotation2 =
                 Annotations.onMethod(Target.class, "foo", Integer.class).getAnnotation(MethodAnnotation.class);
 
-        assertEquals("default", annotation2.value());
+        assertThat(annotation2.value()).isEqualTo("default");
     }
 
     @Test(expected = NullPointerException.class)
     public void gettingNullAnnotationShouldThrowNPE() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         Annotations.onMethod(Target.class, "foo").getAnnotation(null);
@@ -177,19 +199,21 @@ public class MethodAnnotationsTest {
     public void missingAnnotationShouldGetNull() {
         class Target {
             @MethodAnnotation
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         Retention annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(Retention.class);
 
-        assertNull(annotation);
+        assertThat(annotation).isNull();
     }
 
     @Test
     public void expandedAnnotationShouldBePresent() {
         class Target {
             @MethodStereotype
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(MethodAnnotation.class);
@@ -201,7 +225,8 @@ public class MethodAnnotationsTest {
     public void indirectlyExpandedAnnotationShouldBePresent() {
         class Target {
             @IndirectMethodStereotype
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         boolean present = Annotations.onMethod(Target.class, "foo").isAnnotationPresent(MethodAnnotation.class);
@@ -213,24 +238,26 @@ public class MethodAnnotationsTest {
     public void shouldGetStereotypeAnnotation() {
         class Target {
             @MethodStereotype
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
 
-        assertEquals("stereotype-test", annotation.value());
+        assertThat(annotation.value()).isEqualTo("stereotype-test");
     }
 
     @Test
     public void shouldGetDoubleIndirectAnnotations() {
         class Target {
             @IndirectMethodStereotype
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
 
-        assertEquals("stereotype-test", annotation.value());
+        assertThat(annotation.value()).isEqualTo("stereotype-test");
     }
 
     @Test
@@ -238,12 +265,13 @@ public class MethodAnnotationsTest {
         class Target {
             @MethodStereotype
             @MethodAnnotation("overwritten-test")
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
 
-        assertEquals("overwritten-test", annotation.value());
+        assertThat(annotation.value()).isEqualTo("overwritten-test");
     }
 
     @Test
@@ -251,64 +279,69 @@ public class MethodAnnotationsTest {
         class Target {
             @IndirectMethodStereotype
             @MethodAnnotation("overwritten-test")
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
 
-        assertEquals("overwritten-test", annotation.value());
+        assertThat(annotation.value()).isEqualTo("overwritten-test");
     }
 
     @Test
     public void shouldDefaultToTypeAnnotation() {
         @MethodAnnotation("type-default")
         class Target {
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         MethodAnnotation annotation = Annotations.onMethod(Target.class, "foo").getAnnotation(MethodAnnotation.class);
 
-        assertEquals("type-default", annotation.value());
+        assertThat(annotation.value()).isEqualTo("type-default");
     }
 
     @Test
     public void shouldInheritMethodAnnotationFromPackage() {
         class Target {
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         AnnotatedElement onMethod = Annotations.onMethod(Target.class, "foo");
 
         MethodAnnotation methodAnnotation = onMethod.getAnnotation(MethodAnnotation.class);
 
-        assertEquals("package-method-default", methodAnnotation.value());
+        assertThat(methodAnnotation.value()).isEqualTo("package-method-default");
     }
 
     @Test
     public void shouldInheritMethodAnnotationFromTypeStereotype() {
         @MethodStereotype
         class Target {
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         AnnotatedElement onMethod = Annotations.onMethod(Target.class, "foo");
 
         MethodAnnotation methodAnnotation = onMethod.getAnnotation(MethodAnnotation.class);
 
-        assertEquals("stereotype-test", methodAnnotation.value());
+        assertThat(methodAnnotation.value()).isEqualTo("stereotype-test");
     }
 
     @Test
     public void shouldInheritMethodAnnotationFromPackageStereotype() {
         class Target {
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         AnnotatedElement onMethod = Annotations.onMethod(Target.class, "foo");
 
         MethodAnnotation2 methodAnnotation = onMethod.getAnnotation(MethodAnnotation2.class);
 
-        assertEquals("package-stereotype", methodAnnotation.value());
+        assertThat(methodAnnotation.value()).isEqualTo("package-stereotype");
     }
 
     @Retention(RUNTIME)
@@ -322,14 +355,15 @@ public class MethodAnnotationsTest {
     public void shouldNotInheritNonInheritedMethodAnnotation() {
         class Super {
             @NonInheritedMethodAnnotation("super-method")
-            public void foo() {}
+            public void foo() {
+            }
         }
         class Sub extends Super {}
 
         NonInheritedMethodAnnotation annotation =
                 Annotations.onMethod(Sub.class, "foo").getAnnotation(NonInheritedMethodAnnotation.class);
 
-        assertNull(annotation);
+        assertThat(annotation).isNull();
     }
 
     @Retention(RUNTIME)
@@ -343,14 +377,15 @@ public class MethodAnnotationsTest {
     public void shouldInheritMethodAnnotation() {
         class Super {
             @InheritedMethodAnnotation("super-method")
-            public void foo() {}
+            public void foo() {
+            }
         }
         class Sub extends Super {}
 
         InheritedMethodAnnotation annotation =
                 Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
 
-        assertEquals("super-method", annotation.value());
+        assertThat(annotation.value()).isEqualTo("super-method");
     }
 
     @Test
@@ -358,11 +393,13 @@ public class MethodAnnotationsTest {
     public void shouldInheritOverriddenMethodAnnotation() {
         class Super {
             @InheritedMethodAnnotation("super-method")
-            public void foo() {}
+            public void foo() {
+            }
         }
         class Sub extends Super {
             @Override
-            public void foo() {}
+            public void foo() {
+            }
         }
 
         InheritedMethodAnnotation annotation =
