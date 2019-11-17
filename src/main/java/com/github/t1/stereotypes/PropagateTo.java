@@ -1,9 +1,11 @@
 package com.github.t1.stereotypes;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.*;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * If multiple annotations of a {@link javax.enterprise.inject.Stereotype Stereotype} have properties of the same name

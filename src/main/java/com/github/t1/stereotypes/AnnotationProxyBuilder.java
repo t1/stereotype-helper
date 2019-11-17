@@ -1,8 +1,11 @@
 package com.github.t1.stereotypes;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * {@link #build() Builds} a {@link Proxy dynamic proxy} to overwrite the values of some annotation methods. If there

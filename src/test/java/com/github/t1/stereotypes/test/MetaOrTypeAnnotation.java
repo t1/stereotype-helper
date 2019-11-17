@@ -1,12 +1,14 @@
 package com.github.t1.stereotypes.test;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.*;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target({ ANNOTATION_TYPE, TYPE })
 public @interface MetaOrTypeAnnotation {
-    public String value() default "meta-or-type-annotation";
+    String value() default "meta-or-type-annotation";
 }

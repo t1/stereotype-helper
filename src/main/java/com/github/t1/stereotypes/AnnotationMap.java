@@ -1,7 +1,8 @@
 package com.github.t1.stereotypes;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 class AnnotationMap {
     private Map<Class<? extends Annotation>, Annotation> map = new HashMap<>();
@@ -15,6 +16,6 @@ class AnnotationMap {
     }
 
     Annotation[] toArray() {
-        return map.values().toArray(new Annotation[map.size()]);
+        return map.values().toArray(new Annotation[0]);
     }
 }

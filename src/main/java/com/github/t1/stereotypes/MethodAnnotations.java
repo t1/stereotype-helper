@@ -1,8 +1,10 @@
 package com.github.t1.stereotypes;
 
 import java.lang.annotation.ElementType;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 class MethodAnnotations extends Annotations {
     private static Map<Method, MethodAnnotations> cache = new HashMap<>();

@@ -1,16 +1,21 @@
 package com.github.t1.stereotypes.test;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-import static org.junit.Assert.*;
-
-import java.lang.annotation.*;
+import com.github.t1.stereotypes.Annotations;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import javax.enterprise.inject.Stereotype;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import org.junit.*;
-
-import com.github.t1.stereotypes.Annotations;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class TypeAnnotationsTest {
 

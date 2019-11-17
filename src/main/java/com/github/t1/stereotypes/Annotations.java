@@ -1,9 +1,13 @@
 package com.github.t1.stereotypes;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.slf4j.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * This is the main class for the library to read annotations: instead of calling {@link Class#getAnnotations()

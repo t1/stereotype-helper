@@ -1,19 +1,23 @@
 package com.github.t1.stereotypes.test;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
-
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import com.github.t1.stereotypes.Annotations;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import javax.enterprise.inject.Stereotype;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 
-import org.assertj.core.api.Assertions;
-import org.junit.*;
-
-import com.github.t1.stereotypes.Annotations;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("unused")
 public class MethodAnnotationsTest {
@@ -34,12 +38,9 @@ public class MethodAnnotationsTest {
 
     @Test
     public void shouldFailWithUndefinedField() {
-        try {
-            Annotations.onMethod(Target.class, "undefined");
-            Assertions.fail("expected RuntimeException");
-        } catch (RuntimeException e) {
-            assertThat(e).isInstanceOf(RuntimeException.class).hasCauseInstanceOf(NoSuchMethodException.class);
-        }
+        Throwable thrown = catchThrowable(() -> Annotations.onMethod(Target.class, "undefined"));
+
+        assertThat(thrown).isInstanceOf(RuntimeException.class).hasCauseInstanceOf(NoSuchMethodException.class);
     }
 
     @Test
@@ -114,7 +115,7 @@ public class MethodAnnotationsTest {
         }
 
         MethodAnnotation annotation =
-                Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
+            Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
 
         assertThat(annotation.value()).isEqualTo("default");
     }
@@ -134,12 +135,12 @@ public class MethodAnnotationsTest {
         }
 
         MethodAnnotation annotation1 =
-                Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(MethodAnnotation.class);
+            Annotations.onMethod(Target.class, "method1", String.class).getAnnotation(MethodAnnotation.class);
 
         assertThat(annotation1.value()).isEqualTo("default");
 
         MethodAnnotation annotation2 =
-                Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(MethodAnnotation.class);
+            Annotations.onMethod(Target.class, "method2", String.class).getAnnotation(MethodAnnotation.class);
 
         assertThat(annotation2.value()).isEqualTo("default");
     }
@@ -154,7 +155,7 @@ public class MethodAnnotationsTest {
         }
 
         MethodAnnotation annotation1 = Annotations.onMethod(Target.class, "foo", String.class, Integer.TYPE)
-                .getAnnotation(MethodAnnotation.class);
+            .getAnnotation(MethodAnnotation.class);
 
         assertThat(annotation1.value()).isEqualTo("default");
     }
@@ -174,12 +175,12 @@ public class MethodAnnotationsTest {
         }
 
         MethodAnnotation annotation1 =
-                Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
+            Annotations.onMethod(Target.class, "foo", String.class).getAnnotation(MethodAnnotation.class);
 
         assertThat(annotation1.value()).isEqualTo("default");
 
         MethodAnnotation annotation2 =
-                Annotations.onMethod(Target.class, "foo", Integer.class).getAnnotation(MethodAnnotation.class);
+            Annotations.onMethod(Target.class, "foo", Integer.class).getAnnotation(MethodAnnotation.class);
 
         assertThat(annotation2.value()).isEqualTo("default");
     }
@@ -345,7 +346,7 @@ public class MethodAnnotationsTest {
     }
 
     @Retention(RUNTIME)
-    @Target({ METHOD })
+    @Target({METHOD})
     private @interface NonInheritedMethodAnnotation {
         String value();
     }
@@ -361,13 +362,13 @@ public class MethodAnnotationsTest {
         class Sub extends Super {}
 
         NonInheritedMethodAnnotation annotation =
-                Annotations.onMethod(Sub.class, "foo").getAnnotation(NonInheritedMethodAnnotation.class);
+            Annotations.onMethod(Sub.class, "foo").getAnnotation(NonInheritedMethodAnnotation.class);
 
         assertThat(annotation).isNull();
     }
 
     @Retention(RUNTIME)
-    @Target({ METHOD })
+    @Target({METHOD})
     @Inherited
     private @interface InheritedMethodAnnotation {
         String value();
@@ -383,7 +384,7 @@ public class MethodAnnotationsTest {
         class Sub extends Super {}
 
         InheritedMethodAnnotation annotation =
-                Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
+            Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
 
         assertThat(annotation.value()).isEqualTo("super-method");
     }
@@ -403,7 +404,7 @@ public class MethodAnnotationsTest {
         }
 
         InheritedMethodAnnotation annotation =
-                Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
+            Annotations.onMethod(Sub.class, "foo").getAnnotation(InheritedMethodAnnotation.class);
 
         assertEquals("super-method", annotation.value());
     }

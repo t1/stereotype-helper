@@ -1,17 +1,20 @@
 package com.github.t1.stereotypes.test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
-
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-
-import javax.enterprise.inject.Stereotype;
-
+import com.github.t1.stereotypes.Annotations;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import com.github.t1.stereotypes.Annotations;
+import javax.enterprise.inject.Stereotype;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("unused")
 public class FieldAnnotationsTest {
@@ -29,12 +32,9 @@ public class FieldAnnotationsTest {
 
     @Test
     public void shouldFailWithUndefinedField() {
-        try {
-            Annotations.onField(Target.class, "undefined");
-            Assertions.fail("expected RuntimeException");
-        } catch (RuntimeException e) {
-            assertThat(e).isInstanceOf(RuntimeException.class).hasCauseInstanceOf(NoSuchFieldException.class);
-        }
+        Throwable thrown = catchThrowable(() -> Annotations.onField(Target.class, "undefined"));
+
+        assertThat(thrown).isInstanceOf(RuntimeException.class).hasCauseInstanceOf(NoSuchFieldException.class);
     }
 
     @Test
