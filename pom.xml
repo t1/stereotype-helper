@@ -22,7 +22,7 @@
         <repository>
             <id>bintray-t1-javaee-helpers</id>
             <name>t1-javaee-helpers-stereotype-helper</name>
-            <url>https://api.bintray.com/maven/t1/javaee-helpers/stereotype-helper</url>
+            <url>https://api.bintray.com/maven/t1/javaee-helpers/stereotype-helper/;publish=1</url>
         </repository>
     </distributionManagement>
 
