@@ -1,3 +1,6 @@
+# OBSOLETE: move to https://github.com/t1/power-annotations
+
+
 # About [![Build Status](https://travis-ci.org/t1/stereotype-helper.svg?branch=master)](https://travis-ci.org/t1/stereotype-helper) [![](https://jitci.com/gh/t1/stereotype-helper/svg)](https://jitci.com/gh/t1/stereotype-helper) [![](https://jitpack.io/v/t1/stereotype-helper.svg)](https://jitpack.io/#t1/stereotype-helper)
 
 Helps libraries with using annotations, supporting defaulting (e.g. from class to field) and stereotypes, so their users can encapsulate the libraries' annotations into their own, allowing to abstract and reuse them.
