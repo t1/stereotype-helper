@@ -6,6 +6,7 @@
     <version>1.0.7-SNAPSHOT</version>
     <name>Stereotype Helper</name>
     <description>Helps libraries to support stereotypes, so their users can encapsulate the libraries' annotations into their own, allowing to reuse them.</description>
+    <url>https://github.com/t1/stereotype-helper</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,16 +16,29 @@
     </properties>
 
     <scm>
-        <developerConnection>scm:git:https://github.com/t1/stereotype-helper</developerConnection>
+        <developerConnection>scm:git:https://github.com/t1/stereotype-helper.git</developerConnection>
         <tag>HEAD</tag>
+        <url>https://github.com/t1/stereotype-helper.git</url>
     </scm>
     <distributionManagement>
         <repository>
-            <id>bintray-t1-javaee-helpers</id>
+            <id>ossrh</id>
             <name>t1-javaee-helpers-stereotype-helper</name>
-            <url>https://api.bintray.com/maven/t1/javaee-helpers/stereotype-helper/;publish=1</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://choosealicense.com/licenses/apache-2.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -87,6 +101,16 @@
                     <source>${maven.compiler.source}</source>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -131,4 +155,28 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- always run source+javadoc => see problems early & source available in local repo -->
+                    <plugin>
+                        <!-- but don't run gpg everywhere, esp. not in github actions -->
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
